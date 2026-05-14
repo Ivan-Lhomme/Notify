@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Users struct {
+type User struct {
 	UUID       string		`json:"uuid"`
 	Pseudo     string		`json:"pseudo"`
 	Email      string		`json:"email"`
