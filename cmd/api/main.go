@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fioxify-api/internal/routes"
 	"log"
 	"os"
+
+	"fioxify-api/internal/routes"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"

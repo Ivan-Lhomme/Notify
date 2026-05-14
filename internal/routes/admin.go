@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"fioxify-api/internal/middleware"
 	"fioxify-api/internal/models"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 func Admin(app *fiber.App) {
-	app.Get("/admin/users", func (c fiber.Ctx) error {
+    admin := app.Group("/admin", middleware.Admin)
+
+	admin.Get("/users", func (c fiber.Ctx) error {
         res_mess := models.ReponseJSON{
             Message: "Listing successful !",
         }
@@ -27,7 +30,7 @@ func Admin(app *fiber.App) {
         return c.JSON(res_mess)
     })
 
-    app.Post("/admin/createuser", func (c fiber.Ctx) error {
+    admin.Post("/createuser", func (c fiber.Ctx) error {
         res_mess := models.ReponseJSON{
             Message: "User created successfully !",
         }
@@ -45,7 +48,7 @@ func Admin(app *fiber.App) {
         return c.JSON(res_mess)
     })
 
-    app.Post("/admin/deleteuser", func (c fiber.Ctx) error {
+    admin.Post("/deleteuser", func (c fiber.Ctx) error {
         res_mess := models.ReponseJSON{
             Message: "User deleted successfully !",
         }
@@ -62,7 +65,7 @@ func Admin(app *fiber.App) {
         return c.JSON(res_mess)
     })
 
-    app.Post("/admin/modifyuser", func (c fiber.Ctx) error {
+    admin.Post("/modifyuser", func (c fiber.Ctx) error {
         res_mess := models.ReponseJSON{
             Message: "User modify successfully !",
         }
