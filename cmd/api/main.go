@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"fioxify-api/internal/database"
 	"fioxify-api/internal/routes"
 
 	"github.com/gofiber/fiber/v3"
@@ -11,7 +12,13 @@ import (
 )
 
 func main() {
-    godotenv.Load()
+    err := godotenv.Load()
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    database.Connection()
     app := fiber.New(
         fiber.Config{
             AppName: "Fioxify",
