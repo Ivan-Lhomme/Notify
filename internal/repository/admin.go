@@ -10,7 +10,7 @@ import (
 func Get_all_users(db *sql.DB) ([]models.User, error) {
 	users := []models.User{}
 
-	rows, err := db.Query("SELECT id, pseudo, email, passwd, created_at FROM users")
+	rows, err := db.Query("SELECT * FROM users")
 	if err != nil {
 		log.Println(err)
 		return []models.User{}, err
@@ -20,7 +20,7 @@ func Get_all_users(db *sql.DB) ([]models.User, error) {
 	var user models.User
 
 	for rows.Next() {
-		err := rows.Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Created_at)
+		err := rows.Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Role, &user.Created_at)
 		if err != nil {
 			log.Println(err)
 			return []models.User{}, err
@@ -47,10 +47,10 @@ func Get_one_user(db *sql.DB, UUID string) (models.User, error) {
 }
 
 func Add_user(db *sql.DB, new_user models.User) error {
-	query := 	`INSERT INTO users (pseudo, email, passwd)
-				VALUES ($1, $2, $3) RETURNING id;`
+	query := 	`INSERT INTO users (pseudo, email, passwd, id_role)
+				VALUES ($1, $2, $3, $4)`
 	
-	_, err := db.Exec(query, new_user.Pseudo, new_user.Email, new_user.Password)
+	_, err := db.Exec(query, new_user.Pseudo, new_user.Email, new_user.Password, new_user.Role)
 
 	return err
 }
@@ -64,9 +64,9 @@ func Delete_user(db *sql.DB, UUID string) error {
 }
 
 func Modify_user(db *sql.DB, new_user_data models.User) error {
-	query := `UPDATE users SET pseudo=$1, email=$2, passwd=$3 WHERE id=$4`
+	query := `UPDATE users SET pseudo=$1, email=$2, passwd=$3, id_role=$4 WHERE id=$5`
 
-	_, err := db.Exec(query, new_user_data.Pseudo, new_user_data.Email, new_user_data.Password, new_user_data.UUID)
+	_, err := db.Exec(query, new_user_data.Pseudo, new_user_data.Email, new_user_data.Password, new_user_data.Role, new_user_data.UUID)
 
 	return err
 }

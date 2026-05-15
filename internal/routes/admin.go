@@ -85,9 +85,10 @@ func Admin(app *fiber.App, db *sql.DB) {
         res_mess := models.ReponseJSON{
             Message: "User modify successfully !",
         }
+        fallback_message := "User modify failed !"
 
         var new_user_data models.User
-        err := unmarshall_user(c, &new_user_data, "User modify failed !", check_cfg{})
+        err := unmarshall_user(c, &new_user_data, fallback_message, check_cfg{})
 
         if err != "" {
             res_mess.Message = err
@@ -98,6 +99,7 @@ func Admin(app *fiber.App, db *sql.DB) {
         user, err2 := repository.Get_one_user(db, new_user_data.UUID)
         if err2 != nil {
             fmt.Printf("An error occured during getting one user from admin \n\n%v\n", err2)
+            res_mess.Message = fallback_message
             return c.JSON(res_mess)
         }
         
@@ -106,7 +108,7 @@ func Admin(app *fiber.App, db *sql.DB) {
         err2 = repository.Modify_user(db, user)
         if err2 != nil {
             fmt.Printf("An error occured during modifying user from admin \n\n%v\n", err2)
-            return c.JSON(res_mess)
+            res_mess.Message = fallback_message
         }
 
         return c.JSON(res_mess)

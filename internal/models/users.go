@@ -11,7 +11,7 @@ type User struct {
 	Pseudo     string		`json:"pseudo"`
 	Email      string		`json:"email"`
 	Password   string		`json:"password"`
-	Role       string		`json:"role"`
+	Role       int		`json:"role"`
 	Created_at time.Time	`json:"created_at"`
 }
 
@@ -25,6 +25,8 @@ func (user *User) Format() error {
 
 		user.Password = string(pass_hash)
 	}
+
+	if user.Role == 0 { user.Role = 3 }
 	
 	return nil
 }
@@ -33,7 +35,7 @@ func (user *User) Modify_user(new_user_data User) {
     if new_user_data.Pseudo != "" { user.Pseudo = new_user_data.Pseudo }
 	if new_user_data.Email != "" { user.Email = new_user_data.Email }
 	if new_user_data.Password != "" { user.Password = new_user_data.Password }
-	if new_user_data.Role != "" { user.Role = new_user_data.Role }
+	if new_user_data.Role != 0 { user.Role = new_user_data.Role }
 }
 
 func is_hash(p string) bool {
