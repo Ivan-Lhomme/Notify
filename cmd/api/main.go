@@ -18,14 +18,15 @@ func main() {
         log.Fatal(err)
     }
 
-    database.Connection()
+    db := database.Connection()
+    defer db.Close()
     app := fiber.New(
         fiber.Config{
             AppName: "Fioxify",
         },
     )
 
-    routes.Admin(app)
+    routes.Admin(app, db)
 
     log.Fatal(app.Listen(":" + os.Getenv("HTTP_PORT")))
 }

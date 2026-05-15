@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func Connection() {
+func Connection() *sql.DB {
 	connStr := fmt.Sprintf(
 		"postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		os.Getenv("POSTGRES_USER"),
@@ -18,8 +18,6 @@ func Connection() {
 		os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_DB"),
 	)
-
-	fmt.Println(connStr)
 
 	db, err := sql.Open("postgres", connStr)
 
@@ -32,6 +30,7 @@ func Connection() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Successfully connected to the database !")
-	defer db.Close()
+	fmt.Printf("\nSuccessfully connected to the database !")
+
+	return db
 }

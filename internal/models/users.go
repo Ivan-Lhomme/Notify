@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 type User struct {
 	UUID       string		`json:"uuid"`
@@ -9,4 +13,31 @@ type User struct {
 	Password   string		`json:"password"`
 	Role       string		`json:"role"`
 	Created_at time.Time	`json:"created_at"`
+}
+
+func (user *User) Format() error {
+	if user.Password != "" && !is_hash(user.Password) {
+		pass_hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
+
+		if err != nil {
+			return err
+		}
+
+		user.Password = string(pass_hash)
+	}
+	
+	return nil
+}
+
+func (user *User) Modify_user(new_user_data User) {
+    if new_user_data.Pseudo != "" { user.Pseudo = new_user_data.Pseudo }
+	if new_user_data.Email != "" { user.Email = new_user_data.Email }
+	if new_user_data.Password != "" { user.Password = new_user_data.Password }
+	if new_user_data.Role != "" { user.Role = new_user_data.Role }
+}
+
+func is_hash(p string) bool {
+	_, err := bcrypt.Cost([]byte(p))
+
+	return err == nil
 }
