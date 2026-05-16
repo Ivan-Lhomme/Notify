@@ -32,20 +32,6 @@ func Get_all_users(db *sql.DB) ([]models.User, error) {
 	return users, nil
 }
 
-func Get_one_user(db *sql.DB, UUID string) (models.User, error) {
-	query := `SELECT id, pseudo, email, passwd, created_at FROM users WHERE id=$1`
-
-	var user models.User
-
-	err := db.QueryRow(query, UUID).Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Created_at)
-	if err != nil {
-		log.Println(err)
-		return models.User{}, err
-	}
-
-	return user, nil
-}
-
 func Add_user(db *sql.DB, new_user models.User) error {
 	query := 	`INSERT INTO users (pseudo, email, passwd, id_role)
 				VALUES ($1, $2, $3, $4)`
