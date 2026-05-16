@@ -15,11 +15,11 @@ func Change_password(db *sql.DB, user models.User) error {
 }
 
 func Get_one_playlist(db *sql.DB, playlist_uuid string) (models.Playlist, error) {
-	query := `SELECT * FROM playlist WHERE id=$1`
+	query := `SELECT * FROM playlists WHERE id=$1`
 
 	var playlist models.Playlist
 
-	err := db.QueryRow(query, playlist_uuid).Scan(&playlist.UUID, &playlist.Name, &playlist.Private, &playlist.Created_at)
+	err := db.QueryRow(query, playlist_uuid).Scan(&playlist.UUID, &playlist.Id_owner, &playlist.Name, &playlist.Private, &playlist.Created_at)
 	if err != nil {
 		log.Println(err)
 		return models.Playlist{}, err
@@ -29,7 +29,7 @@ func Get_one_playlist(db *sql.DB, playlist_uuid string) (models.Playlist, error)
 }
 
 func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error) {
-	query := `SELECT id, name, private, created_at playlists WHERE id_owner=$1`
+	query := `SELECT * FROM playlists WHERE id_owner=$1`
 
 	rows, err := db.Query(query, owner_uuid)
 	if err != nil {
@@ -44,7 +44,7 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 	)
 
 	for rows.Next() {
-		err := rows.Scan(&playlist.UUID, &playlist.Name, &playlist.Private, &playlist.Created_at)
+		err := rows.Scan(&playlist.UUID, &playlist.Id_owner, &playlist.Name, &playlist.Private, &playlist.Created_at)
 		if err != nil {
 			log.Println(err)
 			return []models.Playlist{}, err
@@ -57,25 +57,25 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 }
 
 func Create_playlist(db *sql.DB, new_playlist models.Playlist) error {
-	query := `INSERT INTO playlist (id_owner, name, private) VALUES ($1, $2, $3)`
+	query := `INSERT INTO playlists (id_owner, name, private) VALUES ($1, $2, $3)`
 
 	_,err := db.Exec(query, new_playlist.Id_owner, new_playlist.Name, new_playlist.Private)
 
 	return err
 }
 
-func Delete_playlist(db *sql.DB, playlist_uuid string) error {
-	query := `DELETE FROM playlists WHERE id=$1`
+func Delete_playlist(db *sql.DB, playlist models.Playlist) error {
+	query := `DELETE FROM playlists WHERE id=$1 AND id_owner=$2`
 
-	_,err := db.Exec(query, playlist_uuid)
+	_,err := db.Exec(query, playlist.UUID, playlist.Id_owner)
 
 	return err
 }
 
 func Modify_playlist(db *sql.DB, new_playlist_data models.Playlist) error {
-	query := `UPDATE playlists SET name=$1, private=$2 WHERE id=$3`
+	query := `UPDATE playlists SET name=$1, private=$2 WHERE id=$3 AND id_owner=$4`
 
-	_,err := db.Exec(query, new_playlist_data.Name, new_playlist_data.Private, new_playlist_data.UUID)
+	_,err := db.Exec(query, new_playlist_data.Name, new_playlist_data.Private, new_playlist_data.UUID, new_playlist_data.Id_owner)
 
 	return err
 }
