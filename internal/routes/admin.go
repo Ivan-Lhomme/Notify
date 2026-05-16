@@ -2,12 +2,12 @@ package routes
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 
 	"fioxify-api/internal/middleware"
 	"fioxify-api/internal/models"
 	"fioxify-api/internal/repository"
+	"fioxify-api/internal/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -40,7 +40,7 @@ func Admin(app *fiber.App, db *sql.DB) {
         fallback_message := "User created failed !"
         
         var new_user models.User
-        err := unmarshall_user(c, &new_user, fallback_message, check_cfg{Pseudo: true, Email: true, Password: true})
+        err := utils.Unmarshall_user(c, &new_user, fallback_message, utils.Check_cfg{Pseudo: true, Email: true, Password: true})
 
         if err != "" {
             res_mess.Message = err
@@ -64,7 +64,7 @@ func Admin(app *fiber.App, db *sql.DB) {
         fallback_message := "User deleted failed !"
 
         var user models.User
-        err := unmarshall_user(c, &user, fallback_message, check_cfg{UUID: true})
+        err := utils.Unmarshall_user(c, &user, fallback_message, utils.Check_cfg{UUID: true})
 
         if err != "" {
             res_mess.Message = err
@@ -88,7 +88,7 @@ func Admin(app *fiber.App, db *sql.DB) {
         fallback_message := "User modify failed !"
 
         var new_user_data models.User
-        err := unmarshall_user(c, &new_user_data, fallback_message, check_cfg{})
+        err := utils.Unmarshall_user(c, &new_user_data, fallback_message, utils.Check_cfg{})
 
         if err != "" {
             res_mess.Message = err
@@ -113,42 +113,4 @@ func Admin(app *fiber.App, db *sql.DB) {
 
         return c.JSON(res_mess)
     })
-}
-
-func unmarshall_user(c fiber.Ctx, u *models.User, fallback_message string, cfg check_cfg) string {
-    err := json.Unmarshal(c.Body(), u)
-
-    if err != nil {
-        fmt.Printf("An error occured during the unmarshal process :\n\n%v\n", err)
-        return fallback_message
-    }
-
-    if err := check_user_receive(u, cfg); err != "" {
-        return err
-    }
-
-    if err = u.Format(); err != nil {
-        fmt.Printf("An error occured during the user format process :\n\n%v\n", err)
-        return fallback_message
-    }
-
-    return ""
-}
-
-func check_user_receive(u *models.User, cfg check_cfg) string {
-    switch {
-        case u.UUID == "" && cfg.UUID: return "No UUID give !"
-        case u.Pseudo == "" && cfg.Pseudo: return "No pseudo give !"
-        case u.Email == "" && cfg.Email: return "No email give !"
-        case u.Password == "" && cfg.Password: return "No password give !"
-    }
-
-    return ""
-}
-
-type check_cfg struct {
-    UUID bool
-    Pseudo bool
-    Email bool
-    Password bool
 }
