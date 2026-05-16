@@ -35,7 +35,9 @@ func main() {
 }
 
 func init_routes(app *fiber.App, db *sql.DB) {
-    login := app.Group("/", middleware.Login)
+    login := app.Group("/", func (c fiber.Ctx) {
+        middleware.Login(c, db)
+    })
 
     routes.User(login, db)
     routes.Admin(login, db)
