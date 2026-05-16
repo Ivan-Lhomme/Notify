@@ -5,4 +5,5 @@ VALUES ('ADMIN'),
 ('USER');
 
 -- +goose Down
+DELETE FROM users;
 DELETE FROM roles;
