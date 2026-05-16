@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func Admin(c fiber.Ctx) error {
+func Artist(c fiber.Ctx) error {
 	fmt.Println("This is the admin middleware !")
 
 	return c.Next()
