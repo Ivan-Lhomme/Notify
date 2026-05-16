@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func Artist(app *fiber.App, db *sql.DB) {
+func Artist(app fiber.Router, db *sql.DB) {
 	artist := app.Group("/artist", middleware.Artist)
 
 	artist.Get("/musics", func (c fiber.Ctx) error {

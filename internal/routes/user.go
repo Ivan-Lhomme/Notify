@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func User(app *fiber.App, db *sql.DB) {
+func User(app fiber.Router, db *sql.DB) {
 	user := app.Group("/user", middleware.User)
 
 	user.Get("/profile", func (c fiber.Ctx) error {

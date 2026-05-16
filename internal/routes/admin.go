@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func Admin(app *fiber.App, db *sql.DB) {
+func Admin(app fiber.Router, db *sql.DB) {
     admin := app.Group("/admin", middleware.Admin)
 
 	admin.Get("/users", func (c fiber.Ctx) error {
