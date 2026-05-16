@@ -43,10 +43,3 @@ func Check_user_receive(u *models.User, cfg Check_cfg) string {
 
 	return ""
 }
-
-type Check_cfg struct {
-	UUID     bool
-	Pseudo   bool
-	Email    bool
-	Password bool
-}

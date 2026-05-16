@@ -16,7 +16,7 @@ func Admin(app *fiber.App, db *sql.DB) {
     admin := app.Group("/admin", middleware.Admin)
 
 	admin.Get("/users", func (c fiber.Ctx) error {
-        res_mess := models.ReponseJSON{
+        res_mess := utils.ReponseJSON{
             Message: "Listing successful !",
         }
         
@@ -34,7 +34,7 @@ func Admin(app *fiber.App, db *sql.DB) {
     })
 
     admin.Post("/createuser", func (c fiber.Ctx) error {
-        res_mess := models.ReponseJSON{
+        res_mess := utils.ReponseJSON{
             Message: "User created successfully !",
         }
         fallback_message := "User created failed !"
@@ -58,7 +58,7 @@ func Admin(app *fiber.App, db *sql.DB) {
     })
 
     admin.Post("/deleteuser", func (c fiber.Ctx) error {
-        res_mess := models.ReponseJSON{
+        res_mess := utils.ReponseJSON{
             Message: "User deleted successfully !",
         }
         fallback_message := "User deleted failed !"
@@ -82,7 +82,7 @@ func Admin(app *fiber.App, db *sql.DB) {
     })
 
     admin.Post("/modifyuser", func (c fiber.Ctx) error {
-        res_mess := models.ReponseJSON{
+        res_mess := utils.ReponseJSON{
             Message: "User modify successfully !",
         }
         fallback_message := "User modify failed !"
