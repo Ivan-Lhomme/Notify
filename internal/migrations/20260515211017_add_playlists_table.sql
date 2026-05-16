@@ -5,7 +5,7 @@ CREATE TABLE playlists (
     name VARCHAR(255) NOT NULL,
     private BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT NOW(),
-    Foreign Key (id_owner) REFERENCES users(id)
+    Foreign Key (id_owner) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- +goose Down
