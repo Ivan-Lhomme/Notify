@@ -7,3 +7,10 @@ type Playlist struct {
 	Private    bool   `json:"private"`
 	Created_at string `json:"created_at"`
 }
+
+func (playlist *Playlist) Modify_playlist(new_playlist_data Playlist) {
+	if new_playlist_data.Name != "" {
+		playlist.Name = new_playlist_data.Name
+	}
+	playlist.Private = new_playlist_data.Private
+}
