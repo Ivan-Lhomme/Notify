@@ -14,6 +14,20 @@ func Change_password(db *sql.DB, user models.User) error {
 	return err
 }
 
+func Get_one_playlist(db *sql.DB, playlist_uuid string) (models.Playlist, error) {
+	query := `SELECT * FROM playlist WHERE id=$1`
+
+	var playlist models.Playlist
+
+	err := db.QueryRow(query, playlist_uuid).Scan(&playlist.UUID, &playlist.Name, &playlist.Private, &playlist.Created_at)
+	if err != nil {
+		log.Println(err)
+		return models.Playlist{}, err
+	}
+
+	return playlist, nil
+}
+
 func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error) {
 	query := `SELECT id, name, private, created_at playlists WHERE id_owner=$1`
 
