@@ -36,3 +36,30 @@ func Modify_user(db *sql.DB, new_user_data models.User) error {
 
 	return err
 }
+
+func Get_all_musics(db *sql.DB) ([]models.Music, error) {
+	rows, err := db.Query("SELECT * FROM musics")
+	
+	if err != nil {
+		log.Println(err)
+		return []models.Music{}, err
+	}
+	defer rows.Close()
+
+	var (
+		musics []models.Music
+		music models.Music
+	)
+
+	for rows.Next() {
+		err := rows.Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
+		if err != nil {
+			log.Println(err)
+			return []models.Music{}, err
+		}
+
+		musics = append(musics, music)
+	}
+
+	return musics, nil
+}
