@@ -6,6 +6,18 @@ import (
 	"fioxify-api/internal/models"
 )
 
+func Get_one_music_from_user(db *sql.DB, music models.Music) (models.Music, error) {
+	query := `SELECT * FROM musics WHERE id=$1 AND id_publisher=$2`
+
+	err := db.QueryRow(query, music.UUID, music.Id_publisher).Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
+
+	if err != nil {
+		return models.Music{}, err
+	}
+
+	return music, nil
+}
+
 func Get_all_musics_from_user(db *sql.DB, user_uuid string) ([]models.Music, error) {
 	query := `SELECT * FROM musics WHERE id_owner = $1`
 

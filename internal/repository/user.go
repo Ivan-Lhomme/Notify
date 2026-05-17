@@ -118,3 +118,16 @@ func Get_all_musics_in_playlist(db *sql.DB, playlist models.Playlist) ([]models.
 
 	return musics, nil
 }
+
+func Get_one_music(db *sql.DB, music_uuid string) (models.Music, error) {
+	query := `SELECT * FROM musics WHERE id=$1`
+
+	var music models.Music
+	err := db.QueryRow(query, music_uuid).Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
+
+	if err != nil {
+		return models.Music{}, err
+	}
+
+	return music, nil
+}
