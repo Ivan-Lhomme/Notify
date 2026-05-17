@@ -17,9 +17,7 @@ func Login(c fiber.Ctx, db *sql.DB) error {
 	user, err := repository.Get_one_user(db, token_uuid)
 
 	if err != nil {
-		c.Status(401)
-
-		return c.End()
+		return fiber.ErrUnauthorized
 	}
 	
 	c.Locals("user", user)
