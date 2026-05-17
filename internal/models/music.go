@@ -13,3 +13,8 @@ type Music struct {
 	Size         int    	`json:"size"`
 	Upload_at    time.Time 	`json:"upload_at"`
 }
+
+func (music *Music) Modify_music(new_music_data Music) {
+	if new_music_data.Title != "" { music.Title = new_music_data.Title }
+	music.Explicit = new_music_data.Explicit
+}
