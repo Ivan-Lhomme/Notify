@@ -170,6 +170,35 @@ func User(app fiber.Router, db *sql.DB) {
 		return c.JSON(res_mess)
 	})
 
+	user.Post("/musicsinplaylist", func (c fiber.Ctx) error {
+		res_mess := utils.ReponseJSON{}
+
+		var playlist models.Playlist
+		err := unmarshall_playlist(c, &playlist, false)
+		if err != nil {
+			fmt.Printf("An error occured during getting all musics in playlist unmarshall from user \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		playlist, err = repository.Get_one_playlist(db, playlist.UUID)
+
+		if err != nil {
+			fmt.Printf("An error occured during getting all musics in playlis querie 1 from user \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		musics, err := repository.Get_all_musics_in_playlist(db, playlist)
+
+		if err != nil {
+			fmt.Printf("An error occured during get all musics in playlist querie 2 from user \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		res_mess.Data = musics
+
+		return c.JSON(res_mess)
+	})
+
 	user.Post("/addmusictoplaylist", func (c fiber.Ctx) error {
 		res_mess := utils.ReponseJSON{}
 

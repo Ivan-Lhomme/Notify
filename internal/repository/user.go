@@ -87,3 +87,34 @@ func Add_music_to_playlist(db *sql.DB, playlist_uuid, music_uuid string) error {
 
 	return err
 }
+
+func Get_all_musics_in_playlist(db *sql.DB, playlist models.Playlist) ([]models.Music, error) {
+	query := `
+		SELECT musics.* FROM musics
+		JOIN music_in_playlist ON musics.id = music_in_playlist.id_music
+		JOIN playlists ON music_in_playlist.id_playlist = playlists.id
+		WHERE playlists.id = $1 AND playlists.id_owner = $2
+	`
+
+	rows, err := db.Query(query, playlist.UUID, playlist.Id_owner)
+	if err != nil {
+		return []models.Music{}, err
+	}
+	defer rows.Close()
+
+	var (
+		musics []models.Music
+		music models.Music
+	)
+
+	for rows.Next() {
+		err = rows.Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
+		if err != nil {
+			return []models.Music{}, err
+		}
+
+		musics = append(musics, music)
+	}
+
+	return musics, nil
+}
