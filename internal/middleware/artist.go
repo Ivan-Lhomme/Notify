@@ -7,7 +7,7 @@ import (
 )
 
 func Artist(c fiber.Ctx) error {
-	fmt.Println("This is the admin middleware !")
+	fmt.Println("This is the artist middleware !")
 
 	return c.Next()
 }
