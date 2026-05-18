@@ -19,7 +19,7 @@ func Get_one_music_from_user(db *sql.DB, music models.Music) (models.Music, erro
 }
 
 func Get_all_musics_from_user(db *sql.DB, user_uuid string) ([]models.Music, error) {
-	query := `SELECT * FROM musics WHERE id_owner = $1`
+	query := `SELECT * FROM musics WHERE id_publisher = $1`
 
 	rows, err := db.Query(query, user_uuid)
 	if err != nil {

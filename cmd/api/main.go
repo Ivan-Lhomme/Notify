@@ -26,6 +26,7 @@ func main() {
     app := fiber.New(
         fiber.Config{
             AppName: "Fioxify",
+            BodyLimit: 1024 * 1024 * 256,
         },
     )
 
@@ -40,5 +41,6 @@ func init_routes(app *fiber.App, db *sql.DB) {
     })
 
     routes.User(login, db)
+    routes.Artist(login, db)
     routes.Admin(login, db)
 }

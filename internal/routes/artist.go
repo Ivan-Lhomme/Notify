@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"mime/multipart"
+	"os"
 
 	"fioxify-api/internal/middleware"
 	"fioxify-api/internal/models"
@@ -35,6 +37,45 @@ func Artist(app fiber.Router, db *sql.DB) {
 	artist.Post("/uploadmusic", func (c fiber.Ctx) error {
 		res_mess := utils.ReponseJSON{}
 
+		var (
+			music_file_header *multipart.FileHeader
+			music_title string
+			music_explicit bool
+		)
+
+		err := get_form_data(c, &music_file_header, &music_title, &music_explicit)
+
+		if err != nil {
+			fmt.Printf("An error occured during parsing form data from artist \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		user := c.Locals("user").(models.User)
+		music := models.Music{
+			Id_publisher: user.UUID,
+			Title: music_title,
+			Explicit: music_explicit,
+			Duration: 0,
+			Bitrate: 0,
+			Size: int(music_file_header.Size),
+		}
+
+		music.UUID, err = repository.Add_music(db, music)
+		if err != nil {
+			fmt.Printf("An error occured during adding music querie from artist \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+
+		err = c.SaveFile(music_file_header, music_file_name)
+		if err != nil {
+			fmt.Printf("An error occured during saving music from artist \n\n%v\n", err)
+			repository.Delete_music(db, music)
+
+			return c.JSON(res_mess)
+		}
+
 		return c.JSON(res_mess)
 	})
 
@@ -52,7 +93,20 @@ func Artist(app fiber.Router, db *sql.DB) {
 		user := c.Locals("user").(models.User)
 		music.Id_publisher = user.UUID
 
+		music, err = repository.Get_one_music_from_user(db, music)
+		if err != nil {
+			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
 		err = repository.Delete_music(db, music)
+		if err != nil {
+			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+
+		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+		err = os.Remove(music_file_name)
 		if err != nil {
 			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
 			return c.JSON(res_mess)
@@ -83,9 +137,17 @@ func Artist(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
+		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
 		music.Modify_music(new_music_data)
 
 		err = repository.Modify_music(db, music)
+		if err != nil {
+			fmt.Printf("An error occured during modifying music querie 2 from artist \n\n%v\n", err)
+			return c.JSON(res_mess)
+		}
+		
+		music_file_name_new := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+		err = os.Rename(music_file_name, music_file_name_new)
 		if err != nil {
 			fmt.Printf("An error occured during modifying music querie 2 from artist \n\n%v\n", err)
 			return c.JSON(res_mess)
@@ -116,7 +178,7 @@ func Artist(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
-		music.Modify_music(new_music_data)
+		music.Add_play_count(new_music_data.Plays_count)
 
 		err = repository.Modify_music_play_count(db, music)
 		if err != nil {
@@ -137,6 +199,31 @@ func unmarshall_music(c fiber.Ctx, music *models.Music) error {
 	if music.UUID == "" {
 		return errors.New("No music id give")
 	}
+
+	return nil
+}
+
+func get_form_data(c fiber.Ctx, music_file_header **multipart.FileHeader, music_title *string, music_explicit *bool) error {
+	music_file_header_tmp, err := c.FormFile("music")
+	if err != nil {
+		return err
+	}
+	*music_file_header = music_file_header_tmp
+
+	music_title_tmp := c.FormValue("title")
+	*music_title = music_title_tmp
+	if *music_title == "" {
+		return errors.New("No title give")
+	}
+
+	var music_explicit_tmp bool
+	music_explicit_form := c.FormValue("explicit")
+	if music_explicit_form == "true" {
+		music_explicit_tmp = true
+	} else {
+		music_explicit_tmp = false
+	}
+	*music_explicit = music_explicit_tmp
 
 	return nil
 }
