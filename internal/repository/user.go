@@ -14,12 +14,12 @@ func Change_password(db *sql.DB, user models.User) error {
 	return err
 }
 
-func Get_one_playlist(db *sql.DB, playlist_uuid string) (models.Playlist, error) {
-	query := `SELECT * FROM playlists WHERE id=$1`
+func Get_one_playlist(db *sql.DB, new_playlist_data models.Playlist) (models.Playlist, error) {
+	query := `SELECT * FROM playlists WHERE id=$1 AND id_owner=$2`
 
 	var playlist models.Playlist
 
-	err := db.QueryRow(query, playlist_uuid).Scan(&playlist.UUID, &playlist.Id_owner, &playlist.Name, &playlist.Private, &playlist.Created_at)
+	err := db.QueryRow(query, new_playlist_data.UUID, new_playlist_data.Id_owner).Scan(&playlist.UUID, &playlist.Id_owner, &playlist.Name, &playlist.Private, &playlist.Created_at)
 	if err != nil {
 		log.Println(err)
 		return models.Playlist{}, err

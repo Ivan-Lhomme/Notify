@@ -33,14 +33,18 @@ func User(app fiber.Router, db *sql.DB) {
 		err := utils.Unmarshall_user(c, &new_user_data, "nothing", utils.Check_cfg{})
 
 		if err != "" {
-			fmt.Printf("An error occured during modify from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/modify on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
 		user.Modify_user(new_user_data)
 
-		repository.Modify_user(db, user)
+		err2 := repository.Modify_user(db, user)
+		if err2 != nil {
+			fmt.Printf("Error in user/modify on querie : \n%v\n", err)
+			return c.SendStatus(400)
+		}
 
 		return c.JSON(res_mess)
 	})
@@ -52,14 +56,18 @@ func User(app fiber.Router, db *sql.DB) {
 		err := utils.Unmarshall_user(c, &new_user_data, "nothing", utils.Check_cfg{Password: true})
 
 		if err != "" {
-			fmt.Printf("An error occured during change password from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/changepassword on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
 		user.Modify_user(new_user_data)
 
-		repository.Modify_user(db, user)
+		err2 := repository.Modify_user(db, user)
+		if err2 != nil {
+			fmt.Printf("Error in user/modify on querie : \n%v\n", err)
+			return c.SendStatus(500)
+		}
 
 		return c.JSON(res_mess)
 	})
@@ -73,8 +81,8 @@ func User(app fiber.Router, db *sql.DB) {
 		playlists, err := repository.Get_all_playlists(db, user.UUID)
 
 		if err != nil {
-			fmt.Printf("An error occured during listing all playlists from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/playlists on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		res_mess.Data = playlists
@@ -89,8 +97,8 @@ func User(app fiber.Router, db *sql.DB) {
 		err := unmarshall_playlist(c, &playlist, true)
 
 		if err != nil {
-			fmt.Printf("An error occured during playlist creation unmarshall from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/createplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
@@ -98,8 +106,8 @@ func User(app fiber.Router, db *sql.DB) {
 
 		err = repository.Create_playlist(db, playlist)
 		if err != nil {
-			fmt.Printf("An error occured during playlist creation querie from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/createplaylist on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -112,14 +120,14 @@ func User(app fiber.Router, db *sql.DB) {
 		err := unmarshall_playlist(c, &playlist, false)
 
 		if err != nil {
-			fmt.Printf("An error occured during playlist deletion unmarshall from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/deleteplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		err = repository.Delete_playlist(db, playlist)
 		if err != nil {
-			fmt.Printf("An error occured during playlist deletion querie from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/deleteplaylist on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -132,23 +140,26 @@ func User(app fiber.Router, db *sql.DB) {
 		err := unmarshall_playlist(c, &new_playlist_data, false)
 
 		if err != nil {
-			fmt.Printf("An error occured during playlist modifying unmarshall from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/modifyplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
-		playlist, err := repository.Get_one_playlist(db, new_playlist_data.UUID)
+		user := c.Locals("user").(models.User)
+
+		new_playlist_data.Id_owner = user.UUID
+		playlist, err := repository.Get_one_playlist(db, new_playlist_data)
 
 		if err != nil {
-			fmt.Printf("An error occured during playlist modifying querie 1 from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/modifyplaylist on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		playlist.Modify_playlist(new_playlist_data)
 
 		err = repository.Modify_playlist(db, playlist)
 		if err != nil {
-			fmt.Printf("An error occured during playlist modifying querie 2 from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/modifyplaylist on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -161,8 +172,8 @@ func User(app fiber.Router, db *sql.DB) {
 		musics, err := repository.Get_all_musics(db)
 
 		if err != nil {
-			fmt.Printf("An error occured during get all musics from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/musics on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		res_mess.Data = musics
@@ -176,22 +187,24 @@ func User(app fiber.Router, db *sql.DB) {
 		var playlist models.Playlist
 		err := unmarshall_playlist(c, &playlist, false)
 		if err != nil {
-			fmt.Printf("An error occured during getting all musics in playlist unmarshall from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/musicsinplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
-		playlist, err = repository.Get_one_playlist(db, playlist.UUID)
+		user := c.Locals("user").(models.User)
+		playlist.Id_owner = user.UUID
+		playlist, err = repository.Get_one_playlist(db, playlist)
 
 		if err != nil {
-			fmt.Printf("An error occured during getting all musics in playlis querie 1 from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/musicsinplaylist on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		musics, err := repository.Get_all_musics_in_playlist(db, playlist)
 
 		if err != nil {
-			fmt.Printf("An error occured during get all musics in playlist querie 2 from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/musicsinplaylist on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		res_mess.Data = musics
@@ -205,14 +218,25 @@ func User(app fiber.Router, db *sql.DB) {
 		var mtp models.Music_to_playlist
 		err := unmarshall_music_to_playlist(c, &mtp)
 		if err != nil {
-			fmt.Printf("An error occured during adding music to playlist unmarshall from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/addmusictoplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
-		err = repository.Add_music_to_playlist(db, mtp.Id_playlist, mtp.Id_music)
+		user := c.Locals("user").(models.User)
+		playlist := models.Playlist{
+			UUID: mtp.Id_playlist,
+			Id_owner: user.UUID,
+		}
+		playlist, err = repository.Get_one_playlist(db, playlist)
 		if err != nil {
-			fmt.Printf("An error occured during adding music to playlist querie from user \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in user/addmusictoplaylist on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
+		}
+
+		err = repository.Add_music_to_playlist(db, playlist.UUID, mtp.Id_music)
+		if err != nil {
+			fmt.Printf("Error in user/addmusictoplaylist on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -220,9 +244,7 @@ func User(app fiber.Router, db *sql.DB) {
 
 	//TODO
 	user.Post("/downloadmusic", func (c fiber.Ctx) error {
-		res_mess := utils.ReponseJSON{}
-
-		return c.JSON(res_mess)
+		return c.Drop()
 	})
 }
 

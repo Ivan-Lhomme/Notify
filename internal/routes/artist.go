@@ -26,8 +26,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		musics, err := repository.Get_all_musics_from_user(db, user.UUID)
 
 		if err != nil {
-			fmt.Printf("An error occured during listing musics of user from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/musics on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		res_mess.Data = musics
@@ -46,8 +46,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		err := get_form_data(c, &music_file_header, &music_title, &music_explicit)
 
 		if err != nil {
-			fmt.Printf("An error occured during parsing form data from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/uploadmusic on form data parsing : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
@@ -62,18 +62,18 @@ func Artist(app fiber.Router, db *sql.DB) {
 
 		music.UUID, err = repository.Add_music(db, music)
 		if err != nil {
-			fmt.Printf("An error occured during adding music querie from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/uploadmusic on querie : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
 
 		err = c.SaveFile(music_file_header, music_file_name)
 		if err != nil {
-			fmt.Printf("An error occured during saving music from artist \n\n%v\n", err)
+			fmt.Printf("Error in artist/uploadmusic on saving : \n%v\n", err)
 			repository.Delete_music(db, music)
 
-			return c.JSON(res_mess)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -86,8 +86,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		err := unmarshall_music(c, &music)
 
 		if err != nil {
-			fmt.Printf("An error occured during deleting music unmarshall from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/deletemusic on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
@@ -95,21 +95,21 @@ func Artist(app fiber.Router, db *sql.DB) {
 
 		music, err = repository.Get_one_music_from_user(db, music)
 		if err != nil {
-			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/deletemusic on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		err = repository.Delete_music(db, music)
 		if err != nil {
-			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/deletemusic on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
 		err = os.Remove(music_file_name)
 		if err != nil {
-			fmt.Printf("An error occured during deleting music querie from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/deletemusic on file delete : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -122,8 +122,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		err := unmarshall_music(c, &new_music_data)
 
 		if err != nil {
-			fmt.Printf("An error occured during modifying music unmarshall from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/modifymusic on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
@@ -133,8 +133,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		music, err = repository.Get_one_music_from_user(db, new_music_data)
 
 		if err != nil {
-			fmt.Printf("An error occured during modifying music querie 1 from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/modifymusic on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
@@ -142,15 +142,15 @@ func Artist(app fiber.Router, db *sql.DB) {
 
 		err = repository.Modify_music(db, music)
 		if err != nil {
-			fmt.Printf("An error occured during modifying music querie 2 from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/modifymusic on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 		
 		music_file_name_new := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
 		err = os.Rename(music_file_name, music_file_name_new)
 		if err != nil {
-			fmt.Printf("An error occured during modifying music querie 2 from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/modifymusic on file rename : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
@@ -163,8 +163,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 		err := unmarshall_music(c, &new_music_data)
 
 		if err != nil {
-			fmt.Printf("An error occured during adding play count to music unmarshall from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/addplaycount on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		user := c.Locals("user").(models.User)
@@ -174,16 +174,16 @@ func Artist(app fiber.Router, db *sql.DB) {
 		music, err = repository.Get_one_music_from_user(db, new_music_data)
 
 		if err != nil {
-			fmt.Printf("An error occured during adding play count to music querie 1 from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/addplaycount on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
 		}
 
 		music.Add_play_count(new_music_data.Plays_count)
 
 		err = repository.Modify_music_play_count(db, music)
 		if err != nil {
-			fmt.Printf("An error occured during adding play count to music querie 2 from artist \n\n%v\n", err)
-			return c.JSON(res_mess)
+			fmt.Printf("Error in artist/addplaycount on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
 		}
 
 		return c.JSON(res_mess)
