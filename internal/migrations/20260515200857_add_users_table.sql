@@ -4,7 +4,7 @@ CREATE TABLE users (
     pseudo VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     passwd VARCHAR(255) NOT NULL,
-    id_role INT NOT NULL,
+    id_role INT DEFAULT 3,
     created_at TIMESTAMP DEFAULT NOW(),
     Foreign Key (id_role) REFERENCES roles(id)
 );

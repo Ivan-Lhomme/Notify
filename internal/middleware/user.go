@@ -1,13 +1,20 @@
 package middleware
 
 import (
-	"fmt"
+	"notify-api/internal/models"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 func User(c fiber.Ctx) error {
-	fmt.Println("This is the user middleware !")
+	user := c.Locals("user").(models.User)
+	if c.Locals("user") == nil {
+		return fiber.ErrUnauthorized
+	}
+
+	if user.Role == 3 || user.Role == 2 || user.Role == 1 {
+		return c.Next()
+	}
 	
-	return c.Next()
+	return fiber.ErrForbidden
 }

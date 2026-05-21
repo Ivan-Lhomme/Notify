@@ -8,17 +8,16 @@ import (
 	"strconv"
 	"time"
 
-	"notify-api/internal/models"
 	"notify-api/internal/repository"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func Login(c fiber.Ctx, db *sql.DB) error {
+func Auth(c fiber.Ctx, db *sql.DB) error {
 	token_string := c.Cookies("Notify-access_token")
 	if token_string == "" {
-		return fiber.ErrUnauthorized
+		return c.Next()
 	}
 
 	token, err := jwt.Parse(token_string, func(t *jwt.Token) (any, error) {
@@ -45,15 +44,11 @@ func Login(c fiber.Ctx, db *sql.DB) error {
 	}
 
 	user_uuid := claims["user_id"].(string)
-
-	var user models.User
-	user, err = repository.Get_one_user(db, user_uuid)
+	_, err = repository.Get_one_user(db, user_uuid)
 
 	if err != nil {
-		return fiber.ErrUnauthorized
+		return c.Next()
 	}
 	
-	c.Locals("user", user)
-
-	return c.Next()
+	return fiber.ErrForbidden
 }

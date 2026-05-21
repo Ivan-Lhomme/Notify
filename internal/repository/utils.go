@@ -4,15 +4,15 @@ import (
 	"database/sql"
 	"log"
 
-	"fioxify-api/internal/models"
+	"notify-api/internal/models"
 )
 
 func Get_one_user(db *sql.DB, UUID string) (models.User, error) {
-	query := `SELECT id, pseudo, email, passwd, created_at FROM users WHERE id=$1`
+	query := `SELECT id, pseudo, email, passwd, id_role, created_at FROM users WHERE id=$1`
 
 	var user models.User
 
-	err := db.QueryRow(query, UUID).Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Created_at)
+	err := db.QueryRow(query, UUID).Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Role, &user.Created_at)
 	if err != nil {
 		log.Println(err)
 		return models.User{}, err

@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 
-	"fioxify-api/internal/models"
+	"notify-api/internal/models"
 )
 
 func Get_one_music_from_user(db *sql.DB, music models.Music) (models.Music, error) {

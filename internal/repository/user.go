@@ -2,8 +2,8 @@ package repository
 
 import (
 	"database/sql"
-	"fioxify-api/internal/models"
 	"log"
+	"notify-api/internal/models"
 )
 
 func Change_password(db *sql.DB, user models.User) error {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"fioxify-api/internal/models"
+	"notify-api/internal/models"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -24,6 +24,21 @@ func Unmarshall_user(c fiber.Ctx, u *models.User, fallback_message string, cfg C
 	if err = u.Format(); err != nil {
 		fmt.Printf("An error occured during the user format process :\n\n%v\n", err)
 		return fallback_message
+	}
+
+	return ""
+}
+
+func Unmarshall_user_no_format(c fiber.Ctx, u *models.User, fallback_message string, cfg Check_cfg) string {
+	err := json.Unmarshal(c.Body(), u)
+
+	if err != nil {
+		fmt.Printf("An error occured during the unmarshal process :\n\n%v\n", err)
+		return fallback_message
+	}
+
+	if err := Check_user_receive(u, cfg); err != "" {
+		return err
 	}
 
 	return ""

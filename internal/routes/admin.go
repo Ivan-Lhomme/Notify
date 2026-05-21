@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"fioxify-api/internal/middleware"
-	"fioxify-api/internal/models"
-	"fioxify-api/internal/repository"
-	"fioxify-api/internal/utils"
+	"notify-api/internal/middleware"
+	"notify-api/internal/models"
+	"notify-api/internal/repository"
+	"notify-api/internal/utils"
 
 	"github.com/gofiber/fiber/v3"
 )

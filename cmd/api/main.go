@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"fioxify-api/internal/database"
-	"fioxify-api/internal/middleware"
-	"fioxify-api/internal/routes"
+	"notify-api/internal/database"
+	"notify-api/internal/middleware"
+	"notify-api/internal/routes"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
@@ -25,7 +25,7 @@ func main() {
 
     app := fiber.New(
         fiber.Config{
-            AppName: "Fioxify",
+            AppName: "Notify",
             BodyLimit: 1024 * 1024 * 256,
         },
     )
@@ -36,8 +36,15 @@ func main() {
 }
 
 func init_routes(app *fiber.App, db *sql.DB) {
-    login := app.Group("/", func (c fiber.Ctx) {
-        middleware.Login(c, db)
+    auth := app.Group("/auth", func (c fiber.Ctx) error {
+        return middleware.Auth(c, db)
+    })
+    
+    routes.Auth(auth, db)
+    routes.Other(app, db)
+
+    login := app.Group("/api", func (c fiber.Ctx) error {
+        return middleware.Login(c, db)
     })
 
     routes.User(login, db)

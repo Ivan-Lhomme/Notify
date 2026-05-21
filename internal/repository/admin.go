@@ -3,8 +3,9 @@ package repository
 import (
 	"database/sql"
 	"log"
+	"time"
 
-	"fioxify-api/internal/models"
+	"notify-api/internal/models"
 )
 
 func Get_all_users(db *sql.DB) ([]models.User, error) {
@@ -39,4 +40,10 @@ func Add_user(db *sql.DB, new_user models.User) error {
 	_, err := db.Exec(query, new_user.Pseudo, new_user.Email, new_user.Password, new_user.Role)
 
 	return err
+}
+
+func Filter_twofa_ticket(db *sql.DB) {
+	query := `DELETE FROM twofa_tickets WHERE NOT valid OR created_at < $1 OR nbr_of_check > 2`
+
+	db.Exec(query, time.Now().Add(-5 * time.Minute))
 }
