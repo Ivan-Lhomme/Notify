@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"time"
 
 	"notify-api/internal/database"
 	"notify-api/internal/middleware"
 	"notify-api/internal/routes"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 	"github.com/joho/godotenv"
 )
 
@@ -29,6 +31,17 @@ func main() {
             BodyLimit: 1024 * 1024 * 256,
         },
     )
+
+    app.Use(limiter.New(limiter.Config{
+        Max: 10,
+        Expiration: 1 * time.Minute,
+        KeyGenerator: func(c fiber.Ctx) string {
+            return c.IP()
+        },
+        LimitReached: func (c fiber.Ctx) error {
+            return fiber.ErrTooManyRequests
+        },
+    }))
 
     init_routes(app, db)
 
