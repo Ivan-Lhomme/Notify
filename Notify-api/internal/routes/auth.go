@@ -51,7 +51,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 		if err_str != "" {
 			res_mess.Message = err_str
 
-			c.Status(403)
+			c.Status(400)
 			return c.JSON(res_mess)
 		}
 
@@ -60,7 +60,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			fmt.Printf("Error in auth/login on querie \n%v\n", err)
 			res_mess.Message = "Wrong email !"
 
-			c.Status(403)
+			c.Status(400)
 			return c.JSON(res_mess)
 		}
 
@@ -69,7 +69,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			fmt.Printf("Error in auth/login on password check \n%v\n", err)
 			res_mess.Message = "Wrong password !"
 
-			c.Status(403)
+			c.Status(400)
 			return c.JSON(res_mess)
 		}
 
@@ -133,7 +133,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			repository.Delete_one_twofa_ticket(db, tt)
 			res_mess.Message = err.Error()
 
-			c.Status(403)
+			c.Status(400)
 			return c.JSON(res_mess)
 		}
 
@@ -169,6 +169,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Value: tokens.Access_token,
 			Expires: tokens_exp.Access_token,
 			HTTPOnly: true,
+			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
 		c.Cookie(&fiber.Cookie{
@@ -177,6 +178,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Expires: tokens_exp.Refresh_token,
 			HTTPOnly: true,
 			Path: "/refresh",
+			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
 		return c.JSON(res_mess)
@@ -270,7 +272,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			tt.Nbr_of_ckeck = tt.Nbr_of_ckeck + 1
 			repository.Modify_nbr_of_check_twofa_ticket(db, tt)
 
-			return c.SendStatus(403)
+			return c.SendStatus(400)
 		}
 
 		user := repository.Delete_user_temp(db, tt.Id_target)
@@ -307,6 +309,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Value: tokens.Access_token,
 			Expires: tokens_exp.Access_token,
 			HTTPOnly: true,
+			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
 		c.Cookie(&fiber.Cookie{
@@ -315,6 +318,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Expires: tokens_exp.Refresh_token,
 			HTTPOnly: true,
 			Path: "/refresh",
+			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
 		return c.JSON(res_mess)
