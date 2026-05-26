@@ -1,0 +1,18 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form > label {
+  color: blanchedalmond;
+}
+
+.form > input {
+  background-color: #505050;
+  width: 40%;
+  color: blanchedalmond;
+}
+
+.errMessage {
+  color: red;
+}
