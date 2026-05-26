@@ -9,7 +9,7 @@ import (
 func Admin(c fiber.Ctx) error {
 	user := c.Locals("user").(models.User)
 	if c.Locals("user") == nil {
-		return fiber.ErrUnauthorized
+		return c.Drop()
 	}
 
 	if user.Role != 1 {
