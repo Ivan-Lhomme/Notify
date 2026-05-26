@@ -8,7 +8,6 @@ export default async function apiFetch(
   const reqOption: RequestInit = {
     headers: {
       "Content-type": "application/json",
-      "Access-Control-Allow-Origin": "127.0.0.1",
     },
     method: method,
     credentials: "include",
@@ -23,12 +22,16 @@ export default async function apiFetch(
   if (res.status === 401) {
     const reqOptionTmp = {
       ...reqOption,
-      body: null,
+      method: "GET",
     };
     res = await fetch(apiLocation + "/refresh", reqOptionTmp);
 
     if (res.ok) {
-      res = await fetch(url, reqOption);
+      return await fetch(url, reqOption);
+    }
+
+    if (res.status === 401) {
+      window.location.href = "/login";
     }
   }
 
