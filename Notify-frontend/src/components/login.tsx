@@ -42,7 +42,6 @@ export default function Login({
         valid: true,
       };
 
-      console.log(newTicket);
       const res = await apiFetch("/auth/login2fa", "POST", newTicket);
 
       if (res.status === 400) {
@@ -50,9 +49,12 @@ export default function Login({
           ...newTicket,
           valid: false,
         };
+
+        setTicket(newTicket);
+        return;
       }
 
-      setTicket(newTicket);
+      window.location.href = "/";
     }
   };
 
