@@ -18,7 +18,19 @@ export default async function apiFetch(
 
   if (method == "POST") reqOption.body = JSON.stringify(body);
 
-  const res = await fetch(url, reqOption);
+  let res = await fetch(url, reqOption);
+
+  if (res.status === 401) {
+    const reqOptionTmp = {
+      ...reqOption,
+      body: null,
+    };
+    res = await fetch(apiLocation + "/refresh", reqOptionTmp);
+
+    if (res.ok) {
+      res = await fetch(url, reqOption);
+    }
+  }
 
   return res;
 }
