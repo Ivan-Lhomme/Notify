@@ -34,7 +34,7 @@ func Other(app *fiber.App, db *sql.DB) {
 
 	tokens_exp := utils.Tokens_exp{
 		Access_token: time.Now().Add(time.Duration(exp_a) * time.Minute),
-		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Minute),
+		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Hour),
 	}
 
 	app.Get("/refresh", func (c fiber.Ctx) error {
@@ -56,7 +56,7 @@ func Other(app *fiber.App, db *sql.DB) {
 		claims := token.Claims.(jwt.MapClaims)
 		exp := time.Unix(int64(claims["exp"].(float64)), 0)
 
-		if exp.Before(time.Now().Add(time.Duration(-exp_r) * time.Minute)) {
+		if exp.Before(time.Now().Add(time.Duration(-exp_r) * time.Hour)) {
 			return fiber.ErrUnauthorized
 		}
 

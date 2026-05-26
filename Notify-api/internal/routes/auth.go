@@ -39,7 +39,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 
 	tokens_exp := utils.Tokens_exp{
 		Access_token: time.Now().Add(time.Duration(exp_a) * time.Minute),
-		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Minute),
+		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Hour),
 	}
 
 //? -------------------------- Login --------------------------
