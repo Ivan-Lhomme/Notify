@@ -22,13 +22,13 @@ func Generate_token(user_id string, exp time.Time) (string, error) {
 }
 
 func Gen_tokens(user_id string, tokens_exp Tokens_exp) (Tokens, error) {
-	access_token, err := Generate_token(user_id, tokens_exp.Access_token)
+	access_token, err := Generate_token(user_id, time.Now().Add(tokens_exp.Access_token))
 	if err != nil {
 		return Tokens{}, err
 	}
 
 	var refresh_token string
-	refresh_token, err = Generate_token(user_id, tokens_exp.Refresh_token)
+	refresh_token, err = Generate_token(user_id, time.Now().Add(tokens_exp.Refresh_token))
 	if err != nil {
 		return Tokens{}, err
 	}
@@ -44,6 +44,6 @@ type Tokens struct {
 	Refresh_token string
 }
 type Tokens_exp struct {
-	Access_token  time.Time
-	Refresh_token time.Time
+	Access_token  time.Duration
+	Refresh_token time.Duration
 }

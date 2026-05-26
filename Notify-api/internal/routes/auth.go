@@ -38,8 +38,8 @@ func Auth(app fiber.Router, db *sql.DB) {
 
 
 	tokens_exp := utils.Tokens_exp{
-		Access_token: time.Now().Add(time.Duration(exp_a) * time.Minute),
-		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Hour),
+		Access_token: time.Duration(exp_a) * time.Minute,
+		Refresh_token: time.Duration(exp_r) * time.Hour,
 	}
 
 //? -------------------------- Login --------------------------
@@ -164,18 +164,20 @@ func Auth(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
+		expireAt := time.Now().Add(tokens_exp.Access_token)
 		c.Cookie(&fiber.Cookie{
 			Name: "Notify-access_token",
 			Value: tokens.Access_token,
-			Expires: tokens_exp.Access_token,
+			Expires: expireAt,
 			HTTPOnly: true,
 			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
+		expireAt = time.Now().Add(tokens_exp.Refresh_token)
 		c.Cookie(&fiber.Cookie{
 			Name: "Notify-refresh_token",
 			Value: tokens.Refresh_token,
-			Expires: tokens_exp.Refresh_token,
+			Expires: expireAt,
 			HTTPOnly: true,
 			Path: "/refresh",
 			SameSite: fiber.CookieSameSiteNoneMode,
@@ -304,18 +306,20 @@ func Auth(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
+		expireAt := time.Now().Add(tokens_exp.Access_token)
 		c.Cookie(&fiber.Cookie{
 			Name: "Notify-access_token",
 			Value: tokens.Access_token,
-			Expires: tokens_exp.Access_token,
+			Expires: expireAt,
 			HTTPOnly: true,
 			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
+		expireAt = time.Now().Add(tokens_exp.Refresh_token)
 		c.Cookie(&fiber.Cookie{
 			Name: "Notify-refresh_token",
 			Value: tokens.Refresh_token,
-			Expires: tokens_exp.Refresh_token,
+			Expires: expireAt,
 			HTTPOnly: true,
 			Path: "/refresh",
 			SameSite: fiber.CookieSameSiteNoneMode,

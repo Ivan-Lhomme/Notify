@@ -33,8 +33,8 @@ func Other(app *fiber.App, db *sql.DB) {
 
 
 	tokens_exp := utils.Tokens_exp{
-		Access_token: time.Now().Add(time.Duration(exp_a) * time.Minute),
-		Refresh_token: time.Now().Add(time.Duration(exp_r) * time.Hour),
+		Access_token: time.Duration(exp_a) * time.Minute,
+		Refresh_token: time.Duration(exp_r) * time.Hour,
 	}
 
 	app.Get("/refresh", func (c fiber.Ctx) error {
@@ -60,8 +60,9 @@ func Other(app *fiber.App, db *sql.DB) {
 			return fiber.ErrUnauthorized
 		}
 
+		expireAt := time.Now().Add(tokens_exp.Access_token)
 		var access_token string
-		access_token, err = utils.Generate_token(claims["user_id"].(string), tokens_exp.Access_token)
+		access_token, err = utils.Generate_token(claims["user_id"].(string), expireAt)
 		if err != nil {
 			fmt.Printf("Error in refresh on jwt generation \n%v\n", err)
 			return fiber.ErrUnauthorized
@@ -70,7 +71,7 @@ func Other(app *fiber.App, db *sql.DB) {
 		c.Cookie(&fiber.Cookie{
 			Name: "Notify-access_token",
 			Value: access_token,
-			Expires: tokens_exp.Access_token,
+			Expires: expireAt,
 			HTTPOnly: true,
 		})
 
