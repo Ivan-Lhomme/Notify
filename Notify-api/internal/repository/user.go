@@ -30,6 +30,12 @@ func Get_one_playlist(db *sql.DB, new_playlist_data models.Playlist) (models.Pla
 
 func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error) {
 	query := `SELECT * FROM playlists WHERE id_owner=$1`
+	query2 := `
+		SELECT musics.* FROM music_in_playlist
+		JOIN musics ON music_in_playlist.id_music = musics.id
+		WHERE id_playlist=$1
+		ORDER BY added_at
+	`
 
 	rows, err := db.Query(query, owner_uuid)
 	if err != nil {
@@ -41,6 +47,7 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 	var (
 		playlists []models.Playlist
 		playlist models.Playlist
+		music models.Music
 	)
 
 	for rows.Next() {
@@ -48,6 +55,23 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 		if err != nil {
 			log.Println(err)
 			return []models.Playlist{}, err
+		}
+
+		rows2, err2 := db.Query(query2, playlist.UUID)
+		if err2 != nil {
+			log.Println(err2)
+			return []models.Playlist{}, err2
+		}
+		defer rows2.Close()
+
+		for rows2.Next() {
+			err := rows2.Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
+			if err != nil {
+				log.Println(err)
+				return []models.Playlist{}, err
+			}
+
+			playlist.Musics = append(playlist.Musics, music)
 		}
 
 		playlists = append(playlists, playlist)
