@@ -1,0 +1,190 @@
+.middle {
+  display: grid;
+
+  grid-template-columns: 0.1fr 0.9fr 0.5fr;
+
+  gap: 10px;
+  overflow: hidden;
+
+  width: 100vw;
+  height: 100vh;
+
+  align-items: stretch;
+
+  background-color: #000;
+
+  color: aliceblue;
+}
+
+.middle > * {
+  background-color: #121212;
+
+  min-height: 0;
+  min-width: 0;
+
+  padding-top: 20px;
+
+  border-radius: 12px;
+}
+
+.middle > *::-webkit-scrollbar {
+  width: 10px;
+}
+
+.middle > *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.middle > *::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 999px;
+}
+
+.middle > *::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.playlists {
+  height: 100%;
+  overflow: scroll;
+  background: linear-gradient(
+    to bottom,
+    #1f1f1f 0%,
+    #171717 120px,
+    #121212 100%
+  );
+}
+
+.playlists > div {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
+
+  gap: 12px;
+
+  justify-items: center;
+  align-items: start;
+
+  padding: 24px;
+}
+
+.playlistCard {
+  width: 100%;
+  height: 3.5rem;
+
+  cursor: pointer;
+
+  background-color: #282828;
+
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.playlistCard:hover {
+  background-color: #383838;
+  transform: translateY(-2px);
+}
+
+/* Fake playlist cover */
+.playlistImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  border-radius: 8px;
+
+  background: linear-gradient(135deg, #404040, #202020);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  overflow: hidden;
+}
+
+.playlistName {
+  color: #ffffff;
+
+  margin: 0;
+  padding-left: 5%;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+/* Spotify-like floating play button */
+.playButton {
+  position: absolute;
+
+  right: 18px;
+  bottom: 92px;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+  border: none;
+
+  background-color: #1ed760;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transform: translateY(10px);
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    background-color 0.2s ease;
+
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+
+  cursor: pointer;
+}
+
+.playButton:hover {
+  background-color: #3be477;
+  transform: translateY(8px) scale(1.05);
+}
+
+.playlistCard:hover .playButton {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Triangle play icon */
+.playIcon {
+  width: 0;
+  height: 0;
+
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 14px solid #000;
+
+  margin-left: 3px;
+}
+
+/* Scrollbar */
+.playlists::-webkit-scrollbar {
+  width: 12px;
+}
+
+.playlists::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.playlists::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 999px;
+}
+
+.playlists::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

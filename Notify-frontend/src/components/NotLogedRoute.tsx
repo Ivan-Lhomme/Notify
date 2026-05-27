@@ -6,7 +6,9 @@ export default function NotLogedRoute({ children }: { children: ReactNode }) {
   const [isAuth, setIsAuth]: [Boolean | null, Function] = useState(null);
 
   useEffect(() => {
-    apiFetch(`/auth`, "GET").then((res) => setIsAuth(res.status === 403));
+    apiFetch("/refresh", "GET").finally(() => {
+      apiFetch(`/auth`, "GET").then((res) => setIsAuth(res.status === 403));
+    });
   });
 
   if (isAuth === null) return <p>Loading...</p>;

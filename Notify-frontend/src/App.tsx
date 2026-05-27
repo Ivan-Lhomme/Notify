@@ -4,12 +4,21 @@ import Login from "./pages/login";
 import NotLogedRoute from "./components/NotLogedRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute reqAuth="user">
+                <Home />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -27,7 +36,7 @@ function App() {
               </NotLogedRoute>
             }
           />
-          <Route path="/*" element={<Navigate to="/profile" />} />
+          <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>
