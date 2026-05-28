@@ -112,6 +112,14 @@ func Add_music_to_playlist(db *sql.DB, playlist_uuid, music_uuid string) error {
 	return err
 }
 
+func Delete_music_from_playlist(db *sql.DB, playlist_uuid, music_uuid string) error {
+	query := `DELETE FROM music_in_playlist WHERE id_playlist=$1 AND id_music=$2`
+
+	_,err := db.Exec(query, playlist_uuid, music_uuid)
+
+	return err
+}
+
 func Get_all_musics_in_playlist(db *sql.DB, playlist models.Playlist) ([]models.Music, error) {
 	query := `
 		SELECT musics.* FROM musics

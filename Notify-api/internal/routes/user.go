@@ -242,6 +242,36 @@ func User(app fiber.Router, db *sql.DB) {
 		return c.JSON(res_mess)
 	})
 
+	user.Post("/deletemusicfromplaylist", func (c fiber.Ctx) error {
+		res_mess := utils.ReponseJSON{}
+
+		var mtp models.Music_to_playlist
+		err := unmarshall_music_to_playlist(c, &mtp)
+		if err != nil {
+			fmt.Printf("Error in user/addmusictoplaylist on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
+		}
+
+		user := c.Locals("user").(models.User)
+		playlist := models.Playlist{
+			UUID: mtp.Id_playlist,
+			Id_owner: user.UUID,
+		}
+		playlist, err = repository.Get_one_playlist(db, playlist)
+		if err != nil {
+			fmt.Printf("Error in user/addmusictoplaylist on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
+		}
+
+		err = repository.Delete_music_from_playlist(db, playlist.UUID, mtp.Id_music)
+		if err != nil {
+			fmt.Printf("Error in user/addmusictoplaylist on querie 2 : \n%v\n", err)
+			return c.SendStatus(500)
+		}
+
+		return c.JSON(res_mess)
+	})
+
 	//TODO
 	user.Post("/downloadmusic", func (c fiber.Ctx) error {
 		return c.Drop()
