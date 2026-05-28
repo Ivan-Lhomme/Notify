@@ -1,13 +1,20 @@
+.home {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
 .middle {
+  flex: 1;
+  min-height: 0;
   display: grid;
 
   grid-template-columns: 0.1fr 0.9fr 0.5fr;
 
   gap: 10px;
-  overflow: hidden;
 
   width: 100vw;
-  height: 100vh;
 
   align-items: stretch;
 
@@ -53,6 +60,8 @@
     #171717 120px,
     #121212 100%
   );
+
+  padding: 0;
 }
 
 .playlists > div {

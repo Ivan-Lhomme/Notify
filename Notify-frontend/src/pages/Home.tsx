@@ -37,7 +37,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className={styles["home"]}>
       <UpperBar setRoute={setRoute} />
 
       <div className={styles["middle"]}>
@@ -57,6 +57,6 @@ export default function Home() {
       </div>
 
       <PlayingBar />
-    </>
+    </div>
   );
 }
