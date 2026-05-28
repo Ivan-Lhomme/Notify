@@ -3,7 +3,7 @@ import { Navigate } from "react-router";
 import apiFetch from "../../utils/apiFetch";
 
 export default function NotLogedRoute({ children }: { children: ReactNode }) {
-  const [isAuth, setIsAuth]: [Boolean | null, Function] = useState(null);
+  const [isAuth, setIsAuth] = useState<Boolean | null>(null);
 
   useEffect(() => {
     apiFetch("/refresh", "GET").finally(() => {

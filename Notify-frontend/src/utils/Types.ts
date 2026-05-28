@@ -18,3 +18,15 @@ export type Music = {
   size: number;
   upload_at: string;
 };
+
+export type HomeRoute = {
+  profile: boolean;
+  playlist: boolean;
+};
+
+export type Ticket2fa = {
+  uuid: string;
+  email: string;
+  code: string;
+  valid: boolean;
+};

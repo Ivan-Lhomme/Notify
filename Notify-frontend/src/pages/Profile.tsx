@@ -7,7 +7,7 @@ type data = {
 };
 
 export default function Profile() {
-  const [data, setData]: [data, Function] = useState({
+  const [data, setData] = useState<data>({
     start: true,
     user: undefined,
   });

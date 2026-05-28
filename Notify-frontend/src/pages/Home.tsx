@@ -1,45 +1,57 @@
 import ActualMusicInfo from "../components/AcutalMusicInfo";
 import PlaylistBar from "../components/PlaylistBar";
 import UpperBar from "../components/UpperBar";
-import Playlists from "../components/Playlists";
+import Playlists from "./Playlists";
 import Profile from "./Profile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import PlayingBar from "../components/PlayingBar";
-import type { HomeProps } from "../utils/PropsType";
 import styles from "../assets/css/home.module.css";
+import PlaylistInfo from "./PlaylistInfo";
+import type { HomeRoute, Playlist } from "../utils/Types";
 
-export default function Home({ route }: HomeProps) {
-  const [data, setData] = useState({
-    start: true,
-    playlists: [],
+export default function Home() {
+  const [route, setRoute] = useState<HomeRoute>({
+    profile: false,
+    playlist: false,
   });
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
 
-  const fetchData = async () => {
-    const res = await apiFetch("/api/user/playlists", "GET");
-    setData({
-      start: false,
-      playlists: (await res.json()).data,
+  const setPlaylistRoute = () => {
+    setRoute({
+      profile: false,
+      playlist: true,
     });
   };
 
-  if (data.start) {
-    fetchData();
+  const fetch = () => {
+    apiFetch("/api/user/playlists", "GET").then((res) => {
+      res.json().then((body) => setPlaylists(body.data));
+    });
+  };
+  useEffect(fetch, []);
+
+  if (playlists.length === 0) {
     return <p>Loading...</p>;
   }
 
-  console.log(data);
-
   return (
     <>
-      <UpperBar />
+      <UpperBar setRoute={setRoute} />
 
       <div className={styles["middle"]}>
-        <PlaylistBar playlists={data.playlists} />
-        {route === "profile" ? (
+        <PlaylistBar playlists={playlists} />
+        {route.profile ? (
           <Profile />
+        ) : route.playlist && playlist ? (
+          <PlaylistInfo playlist={playlist} />
         ) : (
-          <Playlists playlists={data.playlists} />
+          <Playlists
+            playlists={playlists}
+            setPlaylist={setPlaylist}
+            setPlaylistRoute={setPlaylistRoute}
+          />
         )}
         <ActualMusicInfo />
       </div>

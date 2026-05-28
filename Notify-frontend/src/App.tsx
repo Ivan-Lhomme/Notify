@@ -1,9 +1,8 @@
 import "./assets/css/index.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import Login from "./pages/login";
-import NotLogedRoute from "./components/NotLogedRoute";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./pages/Profile";
+import NotLogedRoute from "./components/middleware/NotLogedRoute";
+import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Home from "./pages/Home";
 
 function App() {
@@ -16,14 +15,6 @@ function App() {
             element={
               <ProtectedRoute reqAuth="user">
                 <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute reqAuth="user">
-                <Profile />
               </ProtectedRoute>
             }
           />

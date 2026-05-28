@@ -9,7 +9,7 @@ export default function ProtectedRoute({
   reqAuth: string;
   children: ReactNode;
 }) {
-  const [isAuth, setIsAuth]: [Boolean | null, Function] = useState(null);
+  const [isAuth, setIsAuth] = useState<Boolean | null>(null);
 
   useEffect(() => {
     apiFetch(`/api/${reqAuth}`, "GET").then((res) =>
