@@ -44,13 +44,11 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 	}
 	defer rows.Close()
 
-	var (
-		playlists []models.Playlist
-		playlist models.Playlist
-		music models.Music
-	)
-
+	var playlists []models.Playlist
+	
 	for rows.Next() {
+		var playlist models.Playlist
+		
 		err := rows.Scan(&playlist.UUID, &playlist.Id_owner, &playlist.Name, &playlist.Private, &playlist.Created_at)
 		if err != nil {
 			log.Println(err)
@@ -62,19 +60,21 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 			log.Println(err2)
 			return []models.Playlist{}, err2
 		}
-		defer rows2.Close()
-
+		
 		for rows2.Next() {
+			var music models.Music
+
 			err := rows2.Scan(&music.UUID, &music.Id_publisher, &music.Title, &music.Explicit, &music.Plays_count, &music.Duration, &music.Bitrate, &music.Size, &music.Upload_at)
 			if err != nil {
 				log.Println(err)
 				return []models.Playlist{}, err
 			}
-
+			
 			playlist.Musics = append(playlist.Musics, music)
 		}
-
+		
 		playlists = append(playlists, playlist)
+		rows2.Close()
 	}
 
 	return playlists, nil
