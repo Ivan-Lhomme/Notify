@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 
 	"notify-api/internal/middleware"
 	"notify-api/internal/models"
@@ -270,6 +271,20 @@ func User(app fiber.Router, db *sql.DB) {
 		}
 
 		return c.JSON(res_mess)
+	})
+
+	user.Get("/play/:uuid", func (c fiber.Ctx) error {
+		uuid := c.Params("uuid")
+
+		music, err := repository.Get_one_music(db, uuid)
+		if err != nil {
+			return err
+		}
+
+		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+		return c.SendFile(music_file_name, fiber.SendFile{
+			ByteRange: true,
+		})
 	})
 
 	//TODO
