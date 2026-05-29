@@ -30,3 +30,10 @@ export type Ticket2fa = {
   code: string;
   valid: boolean;
 };
+
+export type ActualMusicInfo = {
+  music: Music;
+  progress: string;
+  currentTime: string;
+  playing: boolean;
+};
