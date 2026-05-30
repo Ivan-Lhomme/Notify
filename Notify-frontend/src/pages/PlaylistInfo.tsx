@@ -1,12 +1,13 @@
 import type { PlaylistProps } from "../utils/PropsType";
 
-export default function PlaylistInfo({ playlist }: PlaylistProps) {
+export default function PlaylistInfo({ playlist, newQueue }: PlaylistProps) {
   return (
     <div>
       <h1>
         {playlist.name}
         {playlist.private && " 🔒"}
       </h1>
+      <button onClick={() => newQueue(playlist.musics)}>▶️</button>
       <div>
         {playlist.musics &&
           playlist.musics.map((music) => (

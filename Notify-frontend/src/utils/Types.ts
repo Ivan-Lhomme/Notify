@@ -22,6 +22,7 @@ export type Music = {
 export type HomeRoute = {
   profile: boolean;
   playlist: boolean;
+  queue: boolean;
 };
 
 export type Ticket2fa = {
@@ -31,9 +32,10 @@ export type Ticket2fa = {
   valid: boolean;
 };
 
-export type ActualMusicInfo = {
+export type ActualMusic = {
   music: Music;
   progress: string;
   currentTime: string;
   playing: boolean;
+  number: number;
 };

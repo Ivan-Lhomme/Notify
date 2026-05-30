@@ -1,38 +1,26 @@
 import { useRef, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import { apiLocation } from "../utils/apiLocation";
-import type { ActualMusicInfo } from "../utils/Types";
+import type { PlayingBarProps } from "../utils/PropsType";
 
-export default function PlayingBar() {
+export default function PlayingBar({
+  queue,
+  actualMusic,
+  setActualMusic,
+}: PlayingBarProps) {
   const musicRef = useRef<HTMLAudioElement>(null);
   const [sliding, setSliding] = useState(false);
-  const [actualMusicInfo, setActualMusicInfo] = useState<ActualMusicInfo>({
-    music: {
-      uuid: "52909db3-f9df-489b-99c0-d29452be109a",
-      id_publisher: "",
-      title: "",
-      explicit: false,
-      plays_count: 0,
-      duration: 0,
-      bitrate: 0,
-      size: 0,
-      upload_at: "",
-    },
-    progress: "0",
-    currentTime: "0:00",
-    playing: false,
-  });
 
   const handleProgress = () => {
     if (!musicRef.current || sliding) return;
 
     const progress = (
-      (musicRef.current.currentTime / actualMusicInfo.music.duration) *
+      (musicRef.current.currentTime / actualMusic.music.duration) *
       100
     ).toString();
 
-    setActualMusicInfo({
-      ...actualMusicInfo,
+    setActualMusic({
+      ...actualMusic,
       progress: progress,
     });
   };
@@ -41,10 +29,10 @@ export default function PlayingBar() {
     if (!musicRef.current) return;
 
     const min = Math.floor(
-      ((Number(e.target.value) / 100) * actualMusicInfo.music.duration) / 60,
+      ((Number(e.target.value) / 100) * actualMusic.music.duration) / 60,
     );
     const sec = Math.floor(
-      ((Number(e.target.value) / 100) * actualMusicInfo.music.duration) % 60,
+      ((Number(e.target.value) / 100) * actualMusic.music.duration) % 60,
     );
 
     let sec_str = sec.toString();
@@ -53,8 +41,8 @@ export default function PlayingBar() {
       sec_str = `0${sec_str}`;
     }
 
-    setActualMusicInfo({
-      ...actualMusicInfo,
+    setActualMusic({
+      ...actualMusic,
       progress: e.target.value,
       currentTime: `${min}:${sec_str}`,
     });
@@ -64,32 +52,32 @@ export default function PlayingBar() {
     if (!musicRef.current) return;
 
     musicRef.current.currentTime =
-      (Number(actualMusicInfo.progress) / 100) * actualMusicInfo.music.duration;
+      (Number(actualMusic.progress) / 100) * actualMusic.music.duration;
   };
 
   const startMusic = async () => {
-    if (!musicRef.current) return;
+    if (!musicRef.current || actualMusic.music.uuid === "") return;
 
     if (
       musicRef.current.src !== "" &&
       Math.floor(musicRef.current.currentTime) ===
-        Math.floor(actualMusicInfo.music.duration)
+        Math.floor(actualMusic.music.duration)
     ) {
       await musicRef.current.play();
-      setActualMusicInfo({
-        ...actualMusicInfo,
+      setActualMusic({
+        ...actualMusic,
         playing: true,
       });
     }
 
     await apiFetch("/refresh", "GET");
-    musicRef.current.src = `${apiLocation}/api/user/play/${actualMusicInfo.music.uuid}`;
+    musicRef.current.src = `${apiLocation}/api/user/play/${actualMusic.music.uuid}`;
 
     await musicRef.current.play();
-    setActualMusicInfo({
-      ...actualMusicInfo,
+    setActualMusic({
+      ...actualMusic,
       music: {
-        ...actualMusicInfo.music,
+        ...actualMusic.music,
         duration: musicRef.current.duration,
       },
       playing: true,
@@ -100,8 +88,8 @@ export default function PlayingBar() {
     if (!musicRef.current) return;
 
     musicRef.current.play();
-    setActualMusicInfo({
-      ...actualMusicInfo,
+    setActualMusic({
+      ...actualMusic,
       playing: true,
     });
   };
@@ -110,8 +98,8 @@ export default function PlayingBar() {
     if (!musicRef.current) return;
 
     musicRef.current.pause();
-    setActualMusicInfo({
-      ...actualMusicInfo,
+    setActualMusic({
+      ...actualMusic,
       playing: false,
     });
   };
@@ -129,20 +117,49 @@ export default function PlayingBar() {
     return `${min}:${sec_str}`;
   };
 
+  const handleMusicEnd = async () => {
+    const musicNumber = actualMusic.number + 1;
+    const newMusic = queue[musicNumber];
+
+    if (!newMusic || !musicRef.current) {
+      setActualMusic({
+        ...actualMusic,
+        playing: false,
+      });
+
+      return;
+    }
+
+    await apiFetch("/refresh", "GET");
+    musicRef.current.src = `${apiLocation}/api/user/play/${newMusic.uuid}`;
+
+    await musicRef.current.play();
+
+    newMusic.duration = musicRef.current.duration;
+    setActualMusic({
+      ...actualMusic,
+      music: newMusic,
+      progress: "0",
+      currentTime: "0:00",
+      playing: false,
+      number: musicNumber,
+    });
+  };
+
   return (
     <div>
       <div>
         <button>⏮️</button>
         <button
           onClick={
-            actualMusicInfo.playing
+            actualMusic.playing
               ? pauseMusic
               : musicRef.current?.src
                 ? unpauseMusic
                 : startMusic
           }
         >
-          {actualMusicInfo.playing ? "⏸️" : "▶️"}
+          {actualMusic.playing ? "⏸️" : "▶️"}
         </button>
         <button>⏭️</button>
       </div>
@@ -150,13 +167,13 @@ export default function PlayingBar() {
         <p>
           {!sliding && musicRef.current
             ? getActualTime(musicRef.current.currentTime)
-            : actualMusicInfo.currentTime}
+            : actualMusic.currentTime}
         </p>
         <input
           type="range"
           name="musicProgress"
           id="musicProgress"
-          value={actualMusicInfo.progress}
+          value={actualMusic.progress}
           onChange={modifySlider}
           onMouseDown={() => {
             setSliding(true);
@@ -167,8 +184,8 @@ export default function PlayingBar() {
           }}
         />
         <p>
-          {actualMusicInfo.music.duration > 0
-            ? getActualTime(actualMusicInfo.music.duration)
+          {actualMusic.music.duration > 0
+            ? getActualTime(actualMusic.music.duration)
             : "0:00"}
         </p>
       </div>
@@ -176,12 +193,7 @@ export default function PlayingBar() {
         <audio
           ref={musicRef}
           onTimeUpdate={handleProgress}
-          onEnded={() => {
-            setActualMusicInfo({
-              ...actualMusicInfo,
-              playing: false,
-            });
-          }}
+          onEnded={handleMusicEnd}
         />
       )}
     </div>

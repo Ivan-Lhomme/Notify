@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { HomeRoute, Playlist } from "./Types";
+import type { ActualMusic, HomeRoute, Music, Playlist } from "./Types";
 
 export type PlaylistsProps = {
   playlists: Playlist[];
@@ -13,8 +13,19 @@ export type PlaylistBarProps = {
 
 export type PlaylistProps = {
   playlist: Playlist;
+  newQueue: Function;
 };
 
 export type UpperBarProps = {
   setRoute: Dispatch<SetStateAction<HomeRoute>>;
+};
+
+export type QueueProps = {
+  queue: Music[];
+};
+
+export type PlayingBarProps = {
+  queue: Music[];
+  actualMusic: ActualMusic;
+  setActualMusic: React.Dispatch<React.SetStateAction<ActualMusic>>;
 };
