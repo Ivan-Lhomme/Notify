@@ -146,10 +146,72 @@ export default function PlayingBar({
     });
   };
 
+  const nextMusic = async () => {
+    const musicNumber =
+      actualMusic.number + 1 < queue.length ? actualMusic.number + 1 : 0;
+
+    const newMusic = queue[musicNumber];
+
+    if (!newMusic || !musicRef.current) {
+      setActualMusic({
+        ...actualMusic,
+        playing: false,
+      });
+
+      return;
+    }
+
+    await apiFetch("/refresh", "GET");
+    musicRef.current.src = `${apiLocation}/api/user/play/${newMusic.uuid}`;
+
+    await musicRef.current.play();
+
+    newMusic.duration = musicRef.current.duration;
+    setActualMusic({
+      ...actualMusic,
+      music: newMusic,
+      progress: "0",
+      currentTime: "0:00",
+      playing: false,
+      number: musicNumber,
+    });
+  };
+
+  const previousMusic = async () => {
+    const musicNumber =
+      actualMusic.number - 1 >= 0 ? actualMusic.number - 1 : queue.length - 1;
+
+    const newMusic = queue[musicNumber];
+
+    if (!newMusic || !musicRef.current) {
+      setActualMusic({
+        ...actualMusic,
+        playing: false,
+      });
+
+      return;
+    }
+
+    await apiFetch("/refresh", "GET");
+    musicRef.current.src = `${apiLocation}/api/user/play/${newMusic.uuid}`;
+
+    await musicRef.current.play();
+
+    newMusic.duration = musicRef.current.duration;
+    setActualMusic({
+      ...actualMusic,
+      music: newMusic,
+      progress: "0",
+      currentTime: "0:00",
+      playing: false,
+      number: musicNumber,
+    });
+  };
+
   return (
     <div>
       <div>
-        <button>⏮️</button>
+        <button onClick={previousMusic}>⏮️</button>
         <button
           onClick={
             actualMusic.playing
@@ -161,7 +223,7 @@ export default function PlayingBar({
         >
           {actualMusic.playing ? "⏸️" : "▶️"}
         </button>
-        <button>⏭️</button>
+        <button onClick={nextMusic}>⏭️</button>
       </div>
       <div>
         <p>

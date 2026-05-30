@@ -5,6 +5,7 @@ export type PlaylistsProps = {
   playlists: Playlist[];
   setPlaylist: Dispatch<SetStateAction<Playlist | null>>;
   setPlaylistRoute: Function;
+  newQueue: Function;
 };
 
 export type PlaylistBarProps = {

@@ -11,7 +11,7 @@ export default function PlaylistInfo({ playlist, newQueue }: PlaylistProps) {
       <div>
         {playlist.musics &&
           playlist.musics.map((music) => (
-            <div key={music.uuid}>
+            <div>
               <p>0</p>
               <p>{music.title}</p>
               <p>{music.duration}</p>

@@ -81,6 +81,7 @@ export default function Home() {
             playlists={playlists}
             setPlaylist={setPlaylist}
             setPlaylistRoute={setPlaylistRoute}
+            newQueue={newQueue}
           />
         )}
 
