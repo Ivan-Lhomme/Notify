@@ -22,6 +22,7 @@ export type Music = {
 export type HomeRoute = {
   profile: boolean;
   playlist: boolean;
+  createPlaylist: boolean;
   queue: boolean;
 };
 

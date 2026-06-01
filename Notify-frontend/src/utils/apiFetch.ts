@@ -19,7 +19,7 @@ export default async function apiFetch(
 
   let res = await fetch(url, reqOption);
 
-  if (res.status === 401 && urlArg != "/refresh") {
+  if (res.status === 401 && urlArg !== "/refresh") {
     const reqOptionTmp = {
       ...reqOption,
       method: "GET",

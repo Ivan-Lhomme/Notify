@@ -11,11 +11,13 @@ import PlaylistInfo from "./PlaylistInfo";
 import type { ActualMusic, HomeRoute, Music, Playlist } from "../utils/Types";
 import Queue from "../components/Queue";
 import Musics from "./Musics";
+import CreatePlaylist from "./CreatePlaylist";
 
 export default function Home() {
   const [route, setRoute] = useState<HomeRoute>({
     profile: false,
     playlist: false,
+    createPlaylist: false,
     queue: false,
   });
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -48,6 +50,17 @@ export default function Home() {
     });
   };
 
+  const resetRoute = () => {
+    setRoute((prev) => {
+      return {
+        ...prev,
+        profile: false,
+        playlist: false,
+        createPlaylist: false,
+      };
+    });
+  };
+
   const newQueue = (queue: Music[]) => {
     setQueue(queue);
     if (queue.length > 0)
@@ -58,10 +71,26 @@ export default function Home() {
       });
   };
 
-  const fetch = () => {
+  const playlistsFetch = () => {
     apiFetch("/api/user/playlists", "GET").then((res) =>
-      res.json().then((body) => setPlaylists(body.data)),
+      res.json().then((body) => {
+        const playlistsTmp = body.data;
+
+        if (playlist) {
+          for (const p of playlistsTmp) {
+            if (p.uuid === playlist.uuid) {
+              setPlaylist(p);
+            }
+          }
+        }
+
+        setPlaylists(playlistsTmp);
+      }),
     );
+  };
+
+  const fetch = () => {
+    playlistsFetch();
 
     apiFetch("/api/user/musics", "GET").then((res) =>
       res.json().then((body) => setMusics(body.data)),
@@ -78,11 +107,26 @@ export default function Home() {
       <UpperBar setRoute={setRoute} />
 
       <div className={styles["middle"]}>
-        <PlaylistBar playlists={playlists} />
+        <PlaylistBar
+          playlists={playlists}
+          setPlaylist={setPlaylist}
+          setPlaylistRoute={setPlaylistRoute}
+          setRoute={setRoute}
+        />
         {route.profile ? (
           <Profile />
         ) : route.playlist && playlist ? (
-          <PlaylistInfo playlist={playlist} newQueue={newQueue} />
+          <PlaylistInfo
+            playlist={playlist}
+            newQueue={newQueue}
+            resetRoute={resetRoute}
+            playlistsFetch={playlistsFetch}
+          />
+        ) : route.createPlaylist ? (
+          <CreatePlaylist
+            resetRoute={resetRoute}
+            playlistsFetch={playlistsFetch}
+          />
         ) : (
           <div className={styles["container"]}>
             <Playlists
@@ -92,7 +136,12 @@ export default function Home() {
               newQueue={newQueue}
               limit={6}
             />
-            <Musics musics={musics} newQueue={newQueue} />
+            <Musics
+              musics={musics}
+              newQueue={newQueue}
+              playlistsFetch={playlistsFetch}
+              playlists={playlists}
+            />
           </div>
         )}
 

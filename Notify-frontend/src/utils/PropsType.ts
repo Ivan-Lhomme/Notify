@@ -11,11 +11,16 @@ export type PlaylistsProps = {
 
 export type PlaylistBarProps = {
   playlists: Playlist[];
+  setPlaylist: Dispatch<SetStateAction<Playlist | null>>;
+  setPlaylistRoute: Function;
+  setRoute: Dispatch<SetStateAction<HomeRoute>>;
 };
 
 export type PlaylistProps = {
   playlist: Playlist;
   newQueue: Function;
+  resetRoute: Function;
+  playlistsFetch: Function;
 };
 
 export type UpperBarProps = {
@@ -35,5 +40,12 @@ export type PlayingBarProps = {
 export type MusicsProps = {
   musics: Music[];
   newQueue: Function;
+  playlistsFetch: Function;
+  playlists: Playlist[];
   limit?: number;
+};
+
+export type CreatePlaylist = {
+  resetRoute: Function;
+  playlistsFetch: Function;
 };
