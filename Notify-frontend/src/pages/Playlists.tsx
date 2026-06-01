@@ -34,7 +34,7 @@ export default function Playlists({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      newQueue(playlist.musics);
+                      newQueue(playlist.musics ? playlist.musics : []);
                     }}
                   >
                     ▶️

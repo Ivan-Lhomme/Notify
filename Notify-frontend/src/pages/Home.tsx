@@ -50,11 +50,12 @@ export default function Home() {
 
   const newQueue = (queue: Music[]) => {
     setQueue(queue);
-    setActualMusic({
-      ...actualMusic,
-      music: queue[0],
-      number: 0,
-    });
+    if (queue.length > 0)
+      setActualMusic({
+        ...actualMusic,
+        music: queue[0],
+        number: 0,
+      });
   };
 
   const fetch = () => {
