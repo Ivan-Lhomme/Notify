@@ -1,6 +1,15 @@
+import { useEffect, useRef } from "react";
 import type { UpperBarProps } from "../utils/PropsType";
+import apiFetch from "../utils/apiFetch";
 
 export default function UpperBar({ setRoute }: UpperBarProps) {
+  const artistRef = useRef(false);
+  useEffect(() => {
+    apiFetch("/api/artist", "GET").then(
+      (res) => (artistRef.current = res.status === 404),
+    );
+  }, []);
+
   const home = () => {
     setRoute((route) => {
       return {
@@ -46,6 +55,11 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
       <button onClick={profile}>Profile</button>
       <button onClick={queue}>Queue</button>
       <button onClick={actualMusicInfo}>Music</button>
+      {artistRef && (
+        <button onClick={() => (window.location.href = "/upload")}>
+          Upload
+        </button>
+      )}
     </div>
   );
 }

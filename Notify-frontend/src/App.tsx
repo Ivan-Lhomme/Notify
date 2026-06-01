@@ -4,6 +4,7 @@ import Login from "./pages/login";
 import NotLogedRoute from "./components/middleware/NotLogedRoute";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Home from "./pages/Home";
+import Upload from "./pages/Upload";
 
 function App() {
   return (
@@ -25,6 +26,15 @@ function App() {
               <NotLogedRoute>
                 <Login />
               </NotLogedRoute>
+            }
+          />
+
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute reqAuth="artist">
+                <Upload />
+              </ProtectedRoute>
             }
           />
           <Route path="/*" element={<Navigate to="/" />} />

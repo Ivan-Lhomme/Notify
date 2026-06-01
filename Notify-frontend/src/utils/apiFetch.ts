@@ -3,19 +3,25 @@ import { apiLocation } from "./apiLocation";
 export default async function apiFetch(
   urlArg: RequestInfo | URL,
   method: string,
-  body: Object = {},
+  body?: Object | FormData,
 ) {
   const reqOption: RequestInit = {
-    headers: {
-      "Content-type": "application/json",
-    },
+    headers: {},
     method: method,
     credentials: "include",
   };
 
   const url = apiLocation + urlArg;
 
-  if (method == "POST") reqOption.body = JSON.stringify(body);
+  if (body instanceof FormData) {
+    reqOption.body = body;
+  } else if (body) {
+    reqOption.headers = {
+      ...reqOption.headers,
+      "Content-type": "application/json",
+    };
+    reqOption.body = JSON.stringify(body);
+  }
 
   let res = await fetch(url, reqOption);
 
