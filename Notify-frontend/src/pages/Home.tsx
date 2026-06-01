@@ -10,6 +10,7 @@ import styles from "../assets/css/home.module.css";
 import PlaylistInfo from "./PlaylistInfo";
 import type { ActualMusic, HomeRoute, Music, Playlist } from "../utils/Types";
 import Queue from "../components/Queue";
+import Musics from "./Musics";
 
 export default function Home() {
   const [route, setRoute] = useState<HomeRoute>({
@@ -19,6 +20,7 @@ export default function Home() {
   });
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [musics, setMusics] = useState<Music[]>([]);
   const [queue, setQueue] = useState<Music[]>([]);
   const [actualMusic, setActualMusic] = useState<ActualMusic>({
     music: {
@@ -56,9 +58,13 @@ export default function Home() {
   };
 
   const fetch = () => {
-    apiFetch("/api/user/playlists", "GET").then((res) => {
-      res.json().then((body) => setPlaylists(body.data));
-    });
+    apiFetch("/api/user/playlists", "GET").then((res) =>
+      res.json().then((body) => setPlaylists(body.data)),
+    );
+
+    apiFetch("/api/user/musics", "GET").then((res) =>
+      res.json().then((body) => setMusics(body.data)),
+    );
   };
   useEffect(fetch, []);
 
@@ -77,12 +83,16 @@ export default function Home() {
         ) : route.playlist && playlist ? (
           <PlaylistInfo playlist={playlist} newQueue={newQueue} />
         ) : (
-          <Playlists
-            playlists={playlists}
-            setPlaylist={setPlaylist}
-            setPlaylistRoute={setPlaylistRoute}
-            newQueue={newQueue}
-          />
+          <div className={styles["container"]}>
+            <Playlists
+              playlists={playlists}
+              setPlaylist={setPlaylist}
+              setPlaylistRoute={setPlaylistRoute}
+              newQueue={newQueue}
+              limit={6}
+            />
+            <Musics musics={musics} newQueue={newQueue} />
+          </div>
         )}
 
         {route.queue ? <Queue queue={queue} /> : <ActualMusicInfo />}

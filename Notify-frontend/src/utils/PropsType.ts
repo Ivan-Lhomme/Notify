@@ -6,6 +6,7 @@ export type PlaylistsProps = {
   setPlaylist: Dispatch<SetStateAction<Playlist | null>>;
   setPlaylistRoute: Function;
   newQueue: Function;
+  limit?: number;
 };
 
 export type PlaylistBarProps = {
@@ -29,4 +30,10 @@ export type PlayingBarProps = {
   queue: Music[];
   actualMusic: ActualMusic;
   setActualMusic: React.Dispatch<React.SetStateAction<ActualMusic>>;
+};
+
+export type MusicsProps = {
+  musics: Music[];
+  newQueue: Function;
+  limit?: number;
 };
