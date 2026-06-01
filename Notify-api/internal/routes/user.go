@@ -125,6 +125,8 @@ func User(app fiber.Router, db *sql.DB) {
 			return c.SendStatus(400)
 		}
 
+		user := c.Locals("user").(models.User)
+		playlist.Id_owner = user.UUID
 		err = repository.Delete_playlist(db, playlist)
 		if err != nil {
 			fmt.Printf("Error in user/deleteplaylist on querie : \n%v\n", err)
