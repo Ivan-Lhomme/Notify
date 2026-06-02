@@ -1,6 +1,6 @@
 import type { PlaylistsProps } from "../utils/PropsType";
-import styles from "../assets/css/home.module.css";
 import { useState } from "react";
+import styles from "../assets/css/playlists.module.css";
 
 export default function Playlists({
   playlists,

@@ -1,0 +1,69 @@
+.sidebarContainer {
+  padding-top: 10px;
+  background-color: #121212;
+  color: #b3b3b3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* The "+" Button */
+.createButton {
+  background-color: #242424;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.createButton:hover {
+  background-color: #3e3e3e;
+  transform: scale(1.05);
+}
+
+.createButton:active {
+  transform: scale(0.95);
+}
+
+.playlistList {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  flex-grow: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+}
+
+.playlistItem {
+  text-align: center;
+  padding: 10% 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.playlistItem:hover {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}

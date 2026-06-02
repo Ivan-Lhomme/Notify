@@ -1,0 +1,60 @@
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding-top: 10px;
+}
+
+.queueItem {
+  display: flex;
+  align-items: center;
+
+  min-height: 52px;
+
+  border-radius: 8px;
+
+  color: #ffffff;
+
+  background: #1a1a1a;
+}
+
+.queueItem p {
+  margin: 0;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Optional numbering */
+.queueItem::before {
+  content: counter(queue);
+  counter-increment: queue;
+
+  padding-left: 10px;
+
+  color: #888;
+  font-size: 0.85rem;
+
+  margin-right: 12px;
+}
+
+.queue {
+  counter-reset: queue;
+}
+
+/* Current track */
+.currentQueueItem {
+  background: rgba(29, 185, 84, 0.15);
+  border-left: 3px solid #1db954;
+}
+
+.currentQueueItem p {
+  margin-left: 10px;
+  color: #1db954;
+  font-weight: 700;
+}

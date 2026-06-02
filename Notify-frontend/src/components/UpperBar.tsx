@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { UpperBarProps } from "../utils/PropsType";
 import apiFetch from "../utils/apiFetch";
+import styles from "../assets/css/upperBar.module.css";
 
 export default function UpperBar({ setRoute }: UpperBarProps) {
   const artistRef = useRef(false);
@@ -16,6 +17,7 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
         ...route,
         profile: false,
         playlist: false,
+        createPlaylist: false,
       };
     });
   };
@@ -26,6 +28,7 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
         ...route,
         profile: true,
         playlist: false,
+        createPlaylist: false,
       };
     });
   };
@@ -49,9 +52,14 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
   };
 
   return (
-    <div>
+    <div className={styles["container"]}>
       <button onClick={home}>🏠</button>
-      <input type="search" name="searchBar" id="searchBar" />
+      <input
+        type="search"
+        name="searchBar"
+        id={styles["searchBar"]}
+        placeholder="Search..."
+      />
       <button onClick={profile}>Profile</button>
       <button onClick={queue}>Queue</button>
       <button onClick={actualMusicInfo}>Music</button>

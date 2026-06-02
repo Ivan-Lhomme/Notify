@@ -1,7 +1,7 @@
 import type { MusicsProps } from "../utils/PropsType";
-import styles from "../assets/css/home.module.css";
 import { useState } from "react";
 import apiFetch from "../utils/apiFetch";
+import styles from "../assets/css/musics.module.css";
 
 export default function Musics({
   musics,
@@ -24,22 +24,23 @@ export default function Musics({
   };
 
   return (
-    <div>
-      <div>
-        {musics.map((music, index) => {
-          if (limit && index >= limit) return;
+    <div className={styles["container"]}>
+      {musics.map((music, index) => {
+        if (limit && index >= limit) return;
 
-          return (
-            <div
-              className={styles["music"]}
-              key={music.uuid}
-              onMouseEnter={() => setCurrentMusicUuid(music.uuid)}
-              onMouseLeave={() => {
-                setShowSelectPlaylist(false);
-                setCurrentMusicUuid("");
-              }}
-            >
-              <p>{music.title}</p>
+        return (
+          <div
+            className={styles["music"]}
+            key={music.uuid}
+            onMouseEnter={() => setCurrentMusicUuid(music.uuid)}
+            onMouseLeave={() => {
+              setShowSelectPlaylist(false);
+              setCurrentMusicUuid("");
+            }}
+          >
+            <p>{music.title}</p>
+
+            <div>
               {music.uuid === currentMusicUuid && (
                 <>
                   <button
@@ -67,9 +68,9 @@ export default function Musics({
               )}
               <button onClick={() => setShowSelectPlaylist(true)}>➕</button>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

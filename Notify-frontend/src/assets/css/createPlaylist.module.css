@@ -1,0 +1,96 @@
+.createPlaylist {
+  width: min(400px, 90%);
+  margin: 40px auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 24px;
+
+  background: none;
+
+  border-radius: 12px;
+}
+
+/* Error message */
+.error {
+  margin: 0;
+
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  background: rgba(255, 107, 107, 0.1);
+
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+/* Label */
+.createPlaylist label {
+  color: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* Input */
+.createPlaylist input {
+  height: 44px;
+
+  padding: 0 14px;
+
+  border: 1px solid #333;
+  border-radius: 8px;
+
+  background: #282828;
+  color: white;
+
+  font-size: 1rem;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.createPlaylist input:focus {
+  border-color: #1db954;
+
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+}
+
+.createPlaylist input::placeholder {
+  color: #888;
+}
+
+/* Button */
+.createPlaylist button {
+  height: 44px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #1db954;
+  color: white;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.createPlaylist button:hover {
+  background: #1ed760;
+  transform: scale(1.02);
+}
+
+.createPlaylist button:active {
+  transform: scale(0.98);
+}

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import { apiLocation } from "../utils/apiLocation";
 import type { PlayingBarProps } from "../utils/PropsType";
+import styles from "../assets/css/playingBar.module.css";
 
 export default function PlayingBar({
   queue,
@@ -140,7 +141,7 @@ export default function PlayingBar({
       ...actualMusic,
       music: newMusic,
       progress: "0",
-      currentTime: "0:00",
+      currentTime: "-:--",
       playing: false,
       number: musicNumber,
     });
@@ -171,7 +172,7 @@ export default function PlayingBar({
       ...actualMusic,
       music: newMusic,
       progress: "0",
-      currentTime: "0:00",
+      currentTime: "-:--",
       playing: false,
       number: musicNumber,
     });
@@ -202,17 +203,18 @@ export default function PlayingBar({
       ...actualMusic,
       music: newMusic,
       progress: "0",
-      currentTime: "0:00",
+      currentTime: "-:--",
       playing: false,
       number: musicNumber,
     });
   };
 
   return (
-    <div>
-      <div>
+    <div className={styles["music-player"]}>
+      <div className={styles["controls"]}>
         <button onClick={previousMusic}>⏮️</button>
         <button
+          className={styles["play-btn"]}
           onClick={
             actualMusic.playing
               ? pauseMusic
@@ -225,7 +227,8 @@ export default function PlayingBar({
         </button>
         <button onClick={nextMusic}>⏭️</button>
       </div>
-      <div>
+
+      <div className={styles["progress-container"]}>
         <p>
           {!sliding && musicRef.current
             ? getActualTime(musicRef.current.currentTime)
@@ -244,11 +247,16 @@ export default function PlayingBar({
             setSliding(false);
             handleSlider();
           }}
+          style={
+            {
+              "--progress": `${actualMusic.progress}%`,
+            } as React.CSSProperties
+          }
         />
         <p>
           {actualMusic.music.duration > 0
             ? getActualTime(actualMusic.music.duration)
-            : "0:00"}
+            : "-:--"}
         </p>
       </div>
       {musicRef && (

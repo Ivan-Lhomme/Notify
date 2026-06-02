@@ -1,5 +1,6 @@
 import { useState } from "react";
 import apiFetch from "../utils/apiFetch";
+import styles from "../assets/css/profile.module.css";
 
 type data = {
   start: boolean;
@@ -31,17 +32,19 @@ export default function Profile() {
 
   return (
     <div>
-      <h1>{data.user.pseudo}</h1>
-      <h2>{data.user.email}</h2>
-      <p>
-        {data.user.role === 1
-          ? "Admin"
-          : data.user.user === 2
-            ? "Artist"
-            : "User"}
-      </p>
+      <div className={styles["profile"]}>
+        <h1>{data.user.pseudo}</h1>
+        <h2>{data.user.email}</h2>
+        <p>
+          {data.user.role === 1
+            ? "Admin"
+            : data.user.user === 2
+              ? "Artist"
+              : "User"}
+        </p>
 
-      <button onClick={logout}>Logout</button>
+        <button onClick={logout}>Logout</button>
+      </div>
     </div>
   );
 }

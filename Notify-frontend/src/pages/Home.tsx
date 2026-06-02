@@ -37,7 +37,7 @@ export default function Home() {
       upload_at: "",
     },
     progress: "0",
-    currentTime: "0:00",
+    currentTime: "-:--",
     playing: false,
     number: -1,
   });
@@ -136,6 +136,9 @@ export default function Home() {
               newQueue={newQueue}
               limit={6}
             />
+
+            <div className={styles["separator"]} />
+
             <Musics
               musics={musics}
               newQueue={newQueue}
@@ -145,7 +148,11 @@ export default function Home() {
           </div>
         )}
 
-        {route.queue ? <Queue queue={queue} /> : <ActualMusicInfo />}
+        {route.queue ? (
+          <Queue queue={queue} actualMusic={actualMusic} />
+        ) : (
+          <ActualMusicInfo />
+        )}
       </div>
 
       <PlayingBar

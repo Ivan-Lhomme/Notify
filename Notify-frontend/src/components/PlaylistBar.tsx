@@ -1,4 +1,5 @@
 import type { PlaylistBarProps } from "../utils/PropsType";
+import styles from "../assets/css/playlistBar.module.css";
 
 export default function PlaylistBar({
   playlists,
@@ -18,20 +19,26 @@ export default function PlaylistBar({
   };
 
   return (
-    <div>
-      <button onClick={createPlaylist}>+</button>
-      {playlists &&
-        playlists.map((playlist) => (
-          <div
-            key={playlist.uuid}
-            onClick={() => {
-              setPlaylist(playlist);
-              setPlaylistRoute();
-            }}
-          >
-            {playlist.name}
-          </div>
-        ))}
+    <div className={styles["sidebarContainer"]}>
+      <button onClick={createPlaylist} className={styles["createButton"]}>
+        +
+      </button>
+
+      <div className={styles["playlistList"]}>
+        {playlists &&
+          playlists.map((playlist) => (
+            <div
+              key={playlist.uuid}
+              onClick={() => {
+                setPlaylist(playlist);
+                setPlaylistRoute();
+              }}
+              className={styles["playlistItem"]}
+            >
+              {playlist.name}
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

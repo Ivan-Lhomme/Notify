@@ -29,6 +29,7 @@ export type UpperBarProps = {
 
 export type QueueProps = {
   queue: Music[];
+  actualMusic: ActualMusic;
 };
 
 export type PlayingBarProps = {
