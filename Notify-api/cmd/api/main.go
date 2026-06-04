@@ -34,7 +34,7 @@ func main() {
     )
 
     app.Use(limiter.New(limiter.Config{
-        Max: 1000,
+        Max: 100,
         Expiration: 1 * time.Minute,
         KeyGenerator: func(c fiber.Ctx) string {
             return c.IP()
