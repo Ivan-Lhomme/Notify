@@ -83,9 +83,9 @@ export default function Home() {
               setPlaylist(p);
             }
           }
-
-          setPlaylists(playlistsTmp);
         }
+
+        setPlaylists(playlistsTmp);
       }),
     );
   };
@@ -132,22 +132,26 @@ export default function Home() {
           />
         ) : (
           <div className={styles["container"]}>
-            <Playlists
-              playlists={playlists}
-              setPlaylist={setPlaylist}
-              setPlaylistRoute={setPlaylistRoute}
-              newQueue={newQueue}
-              limit={6}
-            />
+            {playlists && (
+              <Playlists
+                playlists={playlists}
+                setPlaylist={setPlaylist}
+                setPlaylistRoute={setPlaylistRoute}
+                newQueue={newQueue}
+                limit={6}
+              />
+            )}
 
-            <div className={styles["separator"]} />
+            {playlists && musics && <div className={styles["separator"]} />}
 
-            <Musics
-              musics={musics}
-              newQueue={newQueue}
-              playlistsFetch={playlistsFetch}
-              playlists={playlists}
-            />
+            {musics && (
+              <Musics
+                musics={musics}
+                newQueue={newQueue}
+                playlistsFetch={playlistsFetch}
+                playlists={playlists}
+              />
+            )}
           </div>
         )}
 

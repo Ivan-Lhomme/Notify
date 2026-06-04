@@ -25,53 +25,52 @@ export default function Musics({
 
   return (
     <div className={styles["container"]}>
-      {musics &&
-        musics.map((music, index) => {
-          if (limit && index >= limit) return;
+      {musics.map((music, index) => {
+        if (limit && index >= limit) return;
 
-          return (
-            <div
-              className={styles["music"]}
-              key={music.uuid}
-              onMouseEnter={() => setCurrentMusicUuid(music.uuid)}
-              onMouseLeave={() => {
-                setShowSelectPlaylist(false);
-                setCurrentMusicUuid("");
-              }}
-            >
-              <p>{music.title}</p>
+        return (
+          <div
+            className={styles["music"]}
+            key={music.uuid}
+            onMouseEnter={() => setCurrentMusicUuid(music.uuid)}
+            onMouseLeave={() => {
+              setShowSelectPlaylist(false);
+              setCurrentMusicUuid("");
+            }}
+          >
+            <p>{music.title}</p>
 
-              <div>
-                {music.uuid === currentMusicUuid && (
-                  <>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        newQueue([music]);
-                      }}
-                    >
-                      ▶️
-                    </button>
+            <div>
+              {music.uuid === currentMusicUuid && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      newQueue([music]);
+                    }}
+                  >
+                    ▶️
+                  </button>
 
-                    {showSelectPlaylist && (
-                      <div>
-                        {playlists.map((playlist) => (
-                          <p
-                            key={playlist.uuid}
-                            onClick={() => handleSelectPlaylist(playlist.uuid)}
-                          >
-                            {playlist.name}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-                <button onClick={() => setShowSelectPlaylist(true)}>➕</button>
-              </div>
+                  {showSelectPlaylist && (
+                    <div>
+                      {playlists.map((playlist) => (
+                        <p
+                          key={playlist.uuid}
+                          onClick={() => handleSelectPlaylist(playlist.uuid)}
+                        >
+                          {playlist.name}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+              <button onClick={() => setShowSelectPlaylist(true)}>➕</button>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </div>
   );
 }

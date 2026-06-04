@@ -1,10 +1,5 @@
 .playlists {
-  background: linear-gradient(
-    to bottom,
-    #1f1f1f 0%,
-    #171717 120px,
-    #121212 100%
-  );
+  background: linear-gradient(to bottom, #1f1f1f 0%, #171717 75%, #121212 100%);
   padding: 0;
 }
 
