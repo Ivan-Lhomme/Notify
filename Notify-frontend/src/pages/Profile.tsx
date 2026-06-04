@@ -38,7 +38,7 @@ export default function Profile() {
         <p>
           {data.user.role === 1
             ? "Admin"
-            : data.user.user === 2
+            : data.user.role === 2
               ? "Artist"
               : "User"}
         </p>
