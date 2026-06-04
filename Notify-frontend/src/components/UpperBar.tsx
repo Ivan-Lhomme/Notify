@@ -63,8 +63,11 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
       <button onClick={profile}>Profile</button>
       <button onClick={queue}>Queue</button>
       <button onClick={actualMusicInfo}>Music</button>
-      {artistRef && (
-        <button onClick={() => (window.location.href = "/upload")}>
+      {artistRef.current && (
+        <button
+          className={styles["uploadBtn"]}
+          onClick={() => (window.location.href = "/upload")}
+        >
           Upload
         </button>
       )}

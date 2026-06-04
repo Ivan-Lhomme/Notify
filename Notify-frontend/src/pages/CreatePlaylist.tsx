@@ -1,12 +1,12 @@
 import { useState } from "react";
 import apiFetch from "../utils/apiFetch";
-import type { CreatePlaylist } from "../utils/PropsType";
+import type { CreatePlaylistProps } from "../utils/PropsType";
 import styles from "../assets/css/createPlaylist.module.css";
 
 export default function CreatePlaylist({
   resetRoute,
   playlistsFetch,
-}: CreatePlaylist) {
+}: CreatePlaylistProps) {
   const [name, setName] = useState("");
   const [errMessage, setErrMessage] = useState("");
 

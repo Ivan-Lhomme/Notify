@@ -69,11 +69,11 @@
 }
 
 /* Upload Button */
-.container button:last-child {
+.uploadBtn {
   background: #ff6b35;
 }
 
-.container button:last-child:hover {
+.uploadBtn {
   background: #ff824d;
 }
 

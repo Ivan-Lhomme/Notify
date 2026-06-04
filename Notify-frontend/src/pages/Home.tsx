@@ -3,7 +3,7 @@ import PlaylistBar from "../components/PlaylistBar";
 import UpperBar from "../components/UpperBar";
 import Playlists from "./Playlists";
 import Profile from "./Profile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import PlayingBar from "../components/PlayingBar";
 import styles from "../assets/css/home.module.css";
@@ -14,6 +14,7 @@ import Musics from "./Musics";
 import CreatePlaylist from "./CreatePlaylist";
 
 export default function Home() {
+  const chargeRef = useRef(false);
   const [route, setRoute] = useState<HomeRoute>({
     profile: false,
     playlist: false,
@@ -76,15 +77,15 @@ export default function Home() {
       res.json().then((body) => {
         const playlistsTmp = body.data;
 
-        if (playlist) {
+        if (playlistsTmp && playlist) {
           for (const p of playlistsTmp) {
             if (p.uuid === playlist.uuid) {
               setPlaylist(p);
             }
           }
-        }
 
-        setPlaylists(playlistsTmp);
+          setPlaylists(playlistsTmp);
+        }
       }),
     );
   };
@@ -95,10 +96,12 @@ export default function Home() {
     apiFetch("/api/user/musics", "GET").then((res) =>
       res.json().then((body) => setMusics(body.data)),
     );
+
+    chargeRef.current = true;
   };
   useEffect(fetch, []);
 
-  if (playlists.length === 0) {
+  if (!chargeRef) {
     return <p>Loading...</p>;
   }
 

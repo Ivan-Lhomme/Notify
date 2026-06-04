@@ -5,6 +5,7 @@ import NotLogedRoute from "./components/middleware/NotLogedRoute";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Home from "./pages/Home";
 import Upload from "./pages/Upload";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
             element={
               <NotLogedRoute>
                 <Login />
+              </NotLogedRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <NotLogedRoute>
+                <Register />
               </NotLogedRoute>
             }
           />

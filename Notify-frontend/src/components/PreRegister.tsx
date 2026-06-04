@@ -1,25 +1,22 @@
 import { useState, type ChangeEvent } from "react";
 import styles from "../assets/css/login.module.css";
 import apiFetch from "../utils/apiFetch";
+import type { PreRegisterProps } from "../utils/PropsType";
 
-export default function PreLogin({
-  setTicket,
-}: {
-  setTicket: React.Dispatch<
-    React.SetStateAction<{
-      uuid: string;
-      email: string;
-      code: string;
-      valid: boolean;
-    }>
-  >;
-}) {
+export default function PreRegister({ setTicket }: PreRegisterProps) {
   const [user, setUser] = useState({
+    pseudo: "",
     email: "",
     password: "",
   });
   const [errMessage, setErrMessage] = useState("");
 
+  const handlePseudo = (e: ChangeEvent<HTMLInputElement>) => {
+    setUser({
+      ...user,
+      pseudo: e.target.value,
+    });
+  };
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
@@ -33,8 +30,8 @@ export default function PreLogin({
     });
   };
 
-  const preLogin = async () => {
-    const res = await apiFetch("/auth/login", "POST", user);
+  const preRegister = async () => {
+    const res = await apiFetch("/auth/preregister", "POST", user);
 
     const body = await res.json();
 
@@ -61,6 +58,9 @@ export default function PreLogin({
           <p className={styles["errMessage"]}>{errMessage}</p>
         )}
 
+        <label htmlFor="pseudo">Pseudo</label>
+        <input type="text" name="pseudo" id="pseudo" onChange={handlePseudo} />
+
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" onChange={handleEmail} />
 
@@ -72,11 +72,11 @@ export default function PreLogin({
           onChange={handlePassword}
         />
 
-        <button onClick={preLogin}>Login</button>
+        <button onClick={preRegister}>Register</button>
       </div>
 
-      <button onClick={() => (window.location.href = "/register")}>
-        No accunt yet ?
+      <button onClick={() => (window.location.href = "/login")}>
+        Already have an accunt ?
       </button>
     </>
   );

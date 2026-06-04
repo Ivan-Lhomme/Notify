@@ -1,5 +1,11 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { ActualMusic, HomeRoute, Music, Playlist } from "./Types";
+import type {
+  ActualMusic,
+  HomeRoute,
+  Music,
+  Playlist,
+  Ticket2fa,
+} from "./Types";
 
 export type PlaylistsProps = {
   playlists: Playlist[];
@@ -46,7 +52,16 @@ export type MusicsProps = {
   limit?: number;
 };
 
-export type CreatePlaylist = {
+export type CreatePlaylistProps = {
   resetRoute: Function;
   playlistsFetch: Function;
+};
+
+export type PreRegisterProps = {
+  setTicket: React.Dispatch<React.SetStateAction<Ticket2fa>>;
+};
+
+export type RegisterProps = {
+  ticket: Ticket2fa;
+  setTicket: React.Dispatch<React.SetStateAction<Ticket2fa>>;
 };
