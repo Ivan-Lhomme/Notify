@@ -1,0 +1,101 @@
+.playlist {
+  background: linear-gradient(to bottom, #2a2a2a, #121212);
+  padding: 2rem;
+  color: white;
+}
+
+/* Header */
+.playlist h1 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+
+.playlist h1 p {
+  margin: 0;
+  cursor: pointer;
+}
+
+.playlist h1 input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #1db954;
+  color: white;
+  font-size: 3rem;
+  font-weight: 800;
+  outline: none;
+}
+
+/* Action buttons */
+.playlist > button {
+  background: #282828;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  margin-right: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.playlist > button:hover {
+  background: #1db954;
+  transform: scale(1.05);
+}
+
+/* Songs container */
+.playlist > div:last-child {
+  margin-top: 2rem;
+}
+
+/* Track row */
+.playlist > div:last-child > div {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px 60px;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.playlist > div:last-child > div:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Track number */
+.playlist > div:last-child > div p:first-child {
+  color: #b3b3b3;
+}
+
+/* Track title */
+.playlist > div:last-child > div p:nth-child(2) {
+  font-weight: 500;
+}
+
+/* Duration */
+.playlist > div:last-child > div p:nth-child(3) {
+  color: #b3b3b3;
+  text-align: right;
+}
+
+/* Delete song button */
+.playlist > div:last-child > div button {
+  background: transparent;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.playlist > div:last-child > div button:hover {
+  color: #ff4d4d;
+  transform: scale(1.1);
+}

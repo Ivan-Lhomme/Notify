@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import type { PlaylistProps } from "../utils/PropsType";
 import type { Music } from "../utils/Types";
-import styles from "../assets/css/home.module.css";
+import styles from "../assets/css/playlist.module.css";
 
 export default function PlaylistInfo({
   playlist,
