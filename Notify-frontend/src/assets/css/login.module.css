@@ -1,18 +1,98 @@
 .form {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+
+  width: 100%;
+  max-width: 420px;
+
+  margin: 5rem auto;
+  padding: 2.5rem;
+
+  background: #121212;
+  border-radius: 12px;
+  border: 1px solid #282828;
 }
 
-.form > label {
-  color: blanchedalmond;
+.form label {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
-.form > input {
-  background-color: #505050;
-  width: 40%;
-  color: blanchedalmond;
+.form input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+
+  background: #242424;
+  color: white;
+
+  border: 1px solid #3e3e3e;
+  border-radius: 999px;
+
+  font-size: 1rem;
+  box-sizing: border-box;
+
+  transition: border-color 0.2s ease;
+}
+
+.form input::placeholder {
+  color: #b3b3b3;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: #1db954;
+}
+
+.form button {
+  margin-top: 0.5rem;
+  padding: 0.9rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #1db954;
+  color: black;
+
+  font-weight: 700;
+  font-size: 1rem;
+
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.form button:hover {
+  background: #1ed760;
+  transform: scale(1.02);
+}
+
+.form button:active {
+  transform: scale(0.98);
 }
 
 .errMessage {
-  color: red;
+  color: #f15e6c;
+  text-align: center;
+  margin: 0;
+}
+
+.Button {
+  display: block;
+  margin: 1rem auto;
+
+  background: transparent;
+  border: none;
+
+  color: #b3b3b3;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.Button:hover {
+  color: white;
+  text-decoration: underline;
 }

@@ -75,7 +75,10 @@ export default function PreRegister({ setTicket }: PreRegisterProps) {
         <button onClick={preRegister}>Register</button>
       </div>
 
-      <button onClick={() => (window.location.href = "/login")}>
+      <button
+        className={styles["Button"]}
+        onClick={() => (window.location.href = "/login")}
+      >
         Already have an accunt ?
       </button>
     </>

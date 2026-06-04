@@ -75,7 +75,10 @@ export default function PreLogin({
         <button onClick={preLogin}>Login</button>
       </div>
 
-      <button onClick={() => (window.location.href = "/register")}>
+      <button
+        className={styles["Button"]}
+        onClick={() => (window.location.href = "/register")}
+      >
         No accunt yet ?
       </button>
     </>
