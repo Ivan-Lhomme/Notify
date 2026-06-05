@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"strings"
 
 	"notify-api/internal/middleware"
 	"notify-api/internal/models"
@@ -46,34 +47,42 @@ func Artist(app fiber.Router, db *sql.DB) {
 		err := get_form_data(c, &music_file_header, &music_title, &music_explicit)
 
 		if err != nil {
-			fmt.Printf("Error in artist/uploadmusic on form data parsing : \n%v\n", err)
-			return c.SendStatus(400)
+			res_mess.Message = err.Error()
+			c.Status(400)
+
+			return c.JSON(res_mess)
 		}
 
-		user := c.Locals("user").(models.User)
-		music := models.Music{
-			Id_publisher: user.UUID,
-			Title: music_title,
-			Explicit: music_explicit,
-			Duration: 0,
-			Bitrate: 0,
-			Size: int(music_file_header.Size),
-		}
+		fileType := strings.Split(music_file_header.Header.Get("Content-Type"), "/")
+		
+		if (fileType[1] == "ogg") {user := c.Locals("user").(models.User)
+			music := models.Music{
+				Id_publisher: user.UUID,
+				Title: music_title,
+				Explicit: music_explicit,
+				Duration: 0,
+				Bitrate: 0,
+				Size: int(music_file_header.Size),
+			}
 
-		music.UUID, err = repository.Add_music(db, music)
-		if err != nil {
-			fmt.Printf("Error in artist/uploadmusic on querie : \n%v\n", err)
-			return c.SendStatus(500)
-		}
+			music.UUID, err = repository.Add_music(db, music)
+			if err != nil {
+				fmt.Printf("Error in artist/uploadmusic on querie : \n%v\n", err)
+				return c.SendStatus(500)
+			}
 
-		music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+			music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
 
-		err = c.SaveFile(music_file_header, music_file_name)
-		if err != nil {
-			fmt.Printf("Error in artist/uploadmusic on saving : \n%v\n", err)
-			repository.Delete_music(db, music)
+			err = c.SaveFile(music_file_header, music_file_name)
+			if err != nil {
+				fmt.Printf("Error in artist/uploadmusic on saving : \n%v\n", err)
+				repository.Delete_music(db, music)
 
-			return c.SendStatus(500)
+				return c.SendStatus(500)
+			}
+		} else {
+			c.Status(400)
+			res_mess.Message = "This file isn't an ogg file."
 		}
 
 		return c.JSON(res_mess)
