@@ -173,7 +173,7 @@ export default function PlayingBar({
       music: newMusic,
       progress: "0",
       currentTime: "-:--",
-      playing: false,
+      playing: true,
       number: musicNumber,
     });
   };
@@ -204,7 +204,7 @@ export default function PlayingBar({
       music: newMusic,
       progress: "0",
       currentTime: "-:--",
-      playing: false,
+      playing: true,
       number: musicNumber,
     });
   };
