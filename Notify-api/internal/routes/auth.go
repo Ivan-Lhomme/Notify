@@ -179,7 +179,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Value: tokens.Refresh_token,
 			Expires: expireAt,
 			HTTPOnly: true,
-			Path: "/refresh",
+			Path: "/api/refresh",
 			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
@@ -321,7 +321,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			Value: tokens.Refresh_token,
 			Expires: expireAt,
 			HTTPOnly: true,
-			Path: "/refresh",
+			Path: "/api/refresh",
 			SameSite: fiber.CookieSameSiteNoneMode,
 		})
 
