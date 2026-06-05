@@ -81,7 +81,7 @@ export default function PlaylistInfo({
         {playlist.musics &&
           playlist.musics.map((music, index) => (
             <div key={music.uuid + index}>
-              <p>0</p>
+              <p>{index + 1}</p>
               <p>{music.title}</p>
               <p>{music.duration}</p>
 

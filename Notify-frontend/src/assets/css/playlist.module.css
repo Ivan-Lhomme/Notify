@@ -2,6 +2,8 @@
   background: linear-gradient(to bottom, #2a2a2a, #121212);
   padding: 2rem;
   color: white;
+
+  overflow: scroll;
 }
 
 /* Header */

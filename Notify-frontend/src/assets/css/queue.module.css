@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 6px;
 
+  overflow: scroll;
   padding-top: 10px;
 }
 
@@ -31,20 +32,13 @@
 }
 
 /* Optional numbering */
-.queueItem::before {
-  content: counter(queue);
-  counter-increment: queue;
-
+.index {
   padding-left: 10px;
 
   color: #888;
   font-size: 0.85rem;
 
   margin-right: 12px;
-}
-
-.queue {
-  counter-reset: queue;
 }
 
 /* Current track */
@@ -54,7 +48,12 @@
 }
 
 .currentQueueItem p {
-  margin-left: 10px;
+  margin-left: 8px;
   color: #1db954;
   font-weight: 700;
+}
+
+.currentQueueItem p .index {
+  color: #1db954;
+  padding-left: 0;
 }

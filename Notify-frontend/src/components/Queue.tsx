@@ -5,7 +5,7 @@ export default function Queue({ queue, actualMusic }: QueueProps) {
   return (
     <div className={styles["queue"]}>
       {queue &&
-        queue.map((music) => (
+        queue.map((music, index) => (
           <div
             className={
               styles[
@@ -15,7 +15,9 @@ export default function Queue({ queue, actualMusic }: QueueProps) {
               ]
             }
           >
-            <p>{music.title}</p>
+            <p>
+              <span className={styles["index"]}>{index + 1}</span> {music.title}
+            </p>
           </div>
         ))}
     </div>
