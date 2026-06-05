@@ -15,7 +15,7 @@ export default function Upload() {
 
     if (!res.ok) {
       const body = await res.json();
-      if (body.data && body.data.message) setErrorMessage(body.data.message);
+      if (body.message) setErrorMessage(body.message);
 
       return;
     }
@@ -25,7 +25,9 @@ export default function Upload() {
 
   return (
     <form onSubmit={handleSubmit} className={styles["uploadForm"]}>
-      {errMessage !== "" && <p className={styles["error"]}>{errMessage}</p>}
+      {errMessage !== "" && (
+        <p className={styles["errMessage"]}>{errMessage}</p>
+      )}
 
       <label htmlFor="title">Title</label>
       <input type="text" name="title" id="title" />

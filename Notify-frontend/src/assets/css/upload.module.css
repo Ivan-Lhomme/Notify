@@ -116,3 +116,9 @@
 .uploadForm button:active {
   transform: scale(0.98);
 }
+
+.errMessage {
+  color: #f15e6c;
+  text-align: center;
+  margin: 0;
+}
