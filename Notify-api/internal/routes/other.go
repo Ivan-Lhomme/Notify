@@ -91,7 +91,7 @@ func Other(app *fiber.App, db *sql.DB) {
 			Value: "",
 			Expires: time.Unix(1, 0),
 			HTTPOnly: true,
-			Path: "/api/refresh",
+			Path: os.Getenv("JWT_REFRESH_PATH"),
 		})
 
 		return c.End()
