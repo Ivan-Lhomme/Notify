@@ -11,6 +11,7 @@ export default function Register({ ticket, setTicket }: RegisterProps) {
     });
   }
 
+  const [loading, setLoading] = useState(false);
   const [code, setCode] = useState("");
 
   const handleCode = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +20,8 @@ export default function Register({ ticket, setTicket }: RegisterProps) {
 
   const sendCode = async () => {
     if (code != "" && code.length == 6) {
+      setLoading(true);
+
       let newTicket = {
         ...ticket,
         code: code,
@@ -34,6 +37,7 @@ export default function Register({ ticket, setTicket }: RegisterProps) {
         };
 
         setTicket(newTicket);
+        setLoading(false);
         return;
       }
 
@@ -52,7 +56,11 @@ export default function Register({ ticket, setTicket }: RegisterProps) {
         maxLength={6}
       />
 
-      <button onClick={sendCode}>Login</button>
+      {loading ? (
+        <button>Register</button>
+      ) : (
+        <button onClick={sendCode}>Register</button>
+      )}
     </div>
   );
 }

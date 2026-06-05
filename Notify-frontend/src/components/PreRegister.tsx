@@ -4,6 +4,7 @@ import apiFetch from "../utils/apiFetch";
 import type { PreRegisterProps } from "../utils/PropsType";
 
 export default function PreRegister({ setTicket }: PreRegisterProps) {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     pseudo: "",
     email: "",
@@ -31,12 +32,14 @@ export default function PreRegister({ setTicket }: PreRegisterProps) {
   };
 
   const preRegister = async () => {
+    setLoading(true);
     const res = await apiFetch("/auth/preregister", "POST", user);
 
     const body = await res.json();
 
     if (body.message) {
       setErrMessage(body.message);
+      setLoading(false);
     } else {
       const data = body.data;
 
@@ -72,14 +75,18 @@ export default function PreRegister({ setTicket }: PreRegisterProps) {
           onChange={handlePassword}
         />
 
-        <button onClick={preRegister}>Register</button>
+        {loading ? (
+          <button>Register</button>
+        ) : (
+          <button onClick={preRegister}>Register</button>
+        )}
       </div>
 
       <button
         className={styles["Button"]}
         onClick={() => (window.location.href = "/login")}
       >
-        Already have an accunt ?
+        Already have an account ?
       </button>
     </>
   );

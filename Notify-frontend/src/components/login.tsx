@@ -28,6 +28,7 @@ export default function Login({
     });
   }
 
+  const [loading, setLoading] = useState(false);
   const [code, setCode] = useState("");
 
   const handleCode = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +37,8 @@ export default function Login({
 
   const sendCode = async () => {
     if (code != "" && code.length == 6) {
+      setLoading(true);
+
       let newTicket = {
         ...ticket,
         code: code,
@@ -51,6 +54,7 @@ export default function Login({
         };
 
         setTicket(newTicket);
+        setLoading(false);
         return;
       }
 
@@ -69,7 +73,11 @@ export default function Login({
         maxLength={6}
       />
 
-      <button onClick={sendCode}>Login</button>
+      {loading ? (
+        <button>Login</button>
+      ) : (
+        <button onClick={sendCode}>Login</button>
+      )}
     </div>
   );
 }

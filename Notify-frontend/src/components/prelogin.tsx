@@ -14,6 +14,7 @@ export default function PreLogin({
     }>
   >;
 }) {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -34,12 +35,14 @@ export default function PreLogin({
   };
 
   const preLogin = async () => {
+    setLoading(true);
     const res = await apiFetch("/auth/login", "POST", user);
 
     const body = await res.json();
 
     if (body.message) {
       setErrMessage(body.message);
+      setLoading(false);
     } else {
       const data = body.data;
 
@@ -72,14 +75,18 @@ export default function PreLogin({
           onChange={handlePassword}
         />
 
-        <button onClick={preLogin}>Login</button>
+        {loading ? (
+          <button>Login</button>
+        ) : (
+          <button onClick={preLogin}>Login</button>
+        )}
       </div>
 
       <button
         className={styles["Button"]}
         onClick={() => (window.location.href = "/register")}
       >
-        No accunt yet ?
+        No account yet ?
       </button>
     </>
   );
