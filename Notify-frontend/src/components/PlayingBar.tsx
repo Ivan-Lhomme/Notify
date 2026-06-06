@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import { apiLocation } from "../utils/apiLocation";
 import type { PlayingBarProps } from "../utils/PropsType";
@@ -20,9 +20,11 @@ export default function PlayingBar({
       100
     ).toString();
 
-    setActualMusic({
-      ...actualMusic,
-      progress: progress,
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        progress: progress,
+      };
     });
   };
 
@@ -42,10 +44,12 @@ export default function PlayingBar({
       sec_str = `0${sec_str}`;
     }
 
-    setActualMusic({
-      ...actualMusic,
-      progress: e.target.value,
-      currentTime: `${min}:${sec_str}`,
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        progress: e.target.value,
+        currentTime: `${min}:${sec_str}`,
+      };
     });
   };
 
@@ -59,29 +63,21 @@ export default function PlayingBar({
   const startMusic = async () => {
     if (!musicRef.current || actualMusic.music.uuid === "") return;
 
-    if (
-      musicRef.current.src !== "" &&
-      Math.floor(musicRef.current.currentTime) ===
-        Math.floor(actualMusic.music.duration)
-    ) {
-      await musicRef.current.play();
-      setActualMusic({
-        ...actualMusic,
-        playing: true,
-      });
-    }
-
     await apiFetch("/refresh", "GET");
     musicRef.current.src = `${apiLocation}/api/user/play/${actualMusic.music.uuid}`;
 
     await musicRef.current.play();
-    setActualMusic({
-      ...actualMusic,
-      music: {
-        ...actualMusic.music,
-        duration: musicRef.current.duration,
-      },
-      playing: true,
+    setActualMusic((prev) => {
+      if (!musicRef.current) return prev;
+
+      return {
+        ...prev,
+        music: {
+          ...prev.music,
+          duration: musicRef.current.duration,
+        },
+        playing: true,
+      };
     });
   };
 
@@ -89,9 +85,8 @@ export default function PlayingBar({
     if (!musicRef.current) return;
 
     musicRef.current.play();
-    setActualMusic({
-      ...actualMusic,
-      playing: true,
+    setActualMusic((prev) => {
+      return { ...prev, playing: true };
     });
   };
 
@@ -99,9 +94,8 @@ export default function PlayingBar({
     if (!musicRef.current) return;
 
     musicRef.current.pause();
-    setActualMusic({
-      ...actualMusic,
-      playing: false,
+    setActualMusic((prev) => {
+      return { ...prev, playing: false };
     });
   };
 
@@ -123,9 +117,8 @@ export default function PlayingBar({
     const newMusic = queue[musicNumber];
 
     if (!newMusic || !musicRef.current) {
-      setActualMusic({
-        ...actualMusic,
-        playing: false,
+      setActualMusic((prev) => {
+        return { ...prev, playing: false };
       });
 
       return;
@@ -137,13 +130,15 @@ export default function PlayingBar({
     await musicRef.current.play();
 
     newMusic.duration = musicRef.current.duration;
-    setActualMusic({
-      ...actualMusic,
-      music: newMusic,
-      progress: "0",
-      currentTime: "-:--",
-      playing: false,
-      number: musicNumber,
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        music: newMusic,
+        progress: "0",
+        currentTime: "-:--",
+        playing: false,
+        number: musicNumber,
+      };
     });
   };
 
@@ -154,9 +149,8 @@ export default function PlayingBar({
     const newMusic = queue[musicNumber];
 
     if (!newMusic || !musicRef.current) {
-      setActualMusic({
-        ...actualMusic,
-        playing: false,
+      setActualMusic((prev) => {
+        return { ...prev, playing: false };
       });
 
       return;
@@ -168,13 +162,15 @@ export default function PlayingBar({
     await musicRef.current.play();
 
     newMusic.duration = musicRef.current.duration;
-    setActualMusic({
-      ...actualMusic,
-      music: newMusic,
-      progress: "0",
-      currentTime: "-:--",
-      playing: true,
-      number: musicNumber,
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        music: newMusic,
+        progress: "0",
+        currentTime: "-:--",
+        playing: true,
+        number: musicNumber,
+      };
     });
   };
 
@@ -185,9 +181,8 @@ export default function PlayingBar({
     const newMusic = queue[musicNumber];
 
     if (!newMusic || !musicRef.current) {
-      setActualMusic({
-        ...actualMusic,
-        playing: false,
+      setActualMusic((prev) => {
+        return { ...prev, playing: false };
       });
 
       return;
@@ -199,15 +194,50 @@ export default function PlayingBar({
     await musicRef.current.play();
 
     newMusic.duration = musicRef.current.duration;
-    setActualMusic({
-      ...actualMusic,
-      music: newMusic,
-      progress: "0",
-      currentTime: "-:--",
-      playing: true,
-      number: musicNumber,
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        music: newMusic,
+        progress: "0",
+        currentTime: "-:--",
+        playing: true,
+        number: musicNumber,
+      };
     });
   };
+
+  useEffect(() => {
+    if (!navigator.mediaSession) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: actualMusic.music.title,
+    });
+
+    navigator.mediaSession.setActionHandler(
+      "play",
+      musicRef.current?.src ? unpauseMusic : startMusic,
+    );
+    navigator.mediaSession.setActionHandler("pause", pauseMusic);
+    navigator.mediaSession.setActionHandler("nexttrack", nextMusic);
+    navigator.mediaSession.setActionHandler("previoustrack", previousMusic);
+    navigator.mediaSession.setActionHandler("stop", startMusic);
+
+    return () => {
+      navigator.mediaSession.setActionHandler("play", null);
+      navigator.mediaSession.setActionHandler("pause", null);
+      navigator.mediaSession.setActionHandler("nexttrack", null);
+      navigator.mediaSession.setActionHandler("previoustrack", null);
+      navigator.mediaSession.setActionHandler("stop", null);
+    };
+  }, [actualMusic]);
+
+  useEffect(() => {
+    if (!navigator.mediaSession) return;
+
+    navigator.mediaSession.playbackState = actualMusic.playing
+      ? "playing"
+      : "paused";
+  }, [actualMusic.playing]);
 
   return (
     <div className={styles["music-player"]}>

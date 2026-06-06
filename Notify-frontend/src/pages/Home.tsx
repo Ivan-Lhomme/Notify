@@ -19,7 +19,7 @@ export default function Home() {
     profile: false,
     playlist: false,
     createPlaylist: false,
-    queue: false,
+    queue: true,
   });
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
