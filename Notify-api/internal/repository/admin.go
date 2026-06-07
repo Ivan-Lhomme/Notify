@@ -11,7 +11,7 @@ import (
 func Get_all_users(db *sql.DB) ([]models.User, error) {
 	users := []models.User{}
 
-	rows, err := db.Query("SELECT * FROM users")
+	rows, err := db.Query("SELECT id, pseudo, email, id_role, created_at FROM users")
 	if err != nil {
 		log.Println(err)
 		return []models.User{}, err
@@ -21,7 +21,7 @@ func Get_all_users(db *sql.DB) ([]models.User, error) {
 	var user models.User
 
 	for rows.Next() {
-		err := rows.Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Password, &user.Role, &user.Created_at)
+		err := rows.Scan(&user.UUID, &user.Pseudo, &user.Email, &user.Role, &user.Created_at)
 		if err != nil {
 			log.Println(err)
 			return []models.User{}, err
