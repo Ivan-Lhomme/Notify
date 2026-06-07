@@ -70,11 +70,10 @@
 
 /* Upload Button */
 .uploadBtn {
-  background: #ff6b35;
+  background: #ff6b35 !important;
 }
-
-.uploadBtn {
-  background: #ff824d;
+.uploadBtn:hover {
+  background: #ff4b15 !important;
 }
 
 /* Mobile */
