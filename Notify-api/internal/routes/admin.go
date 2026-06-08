@@ -123,4 +123,10 @@ func Admin(app fiber.Router, db *sql.DB) {
 
         return c.JSON(res_mess)
     })
+
+    admin.Get("/clear2faticket", func (c fiber.Ctx) error {
+        repository.Clear_twofa_ticket(db)
+
+        return c.End()
+    })
 }

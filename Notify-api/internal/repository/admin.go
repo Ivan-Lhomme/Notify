@@ -42,7 +42,7 @@ func Add_user(db *sql.DB, new_user models.User) error {
 	return err
 }
 
-func Filter_twofa_ticket(db *sql.DB) {
+func Clear_twofa_ticket(db *sql.DB) {
 	query := `DELETE FROM twofa_tickets WHERE NOT valid OR created_at < $1 OR nbr_of_check > 2`
 
 	db.Exec(query, time.Now().Add(-5 * time.Minute))
