@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import type { User } from "../utils/Types";
 import type { AdminUsersProps } from "../utils/PropsType";
+import styles from "../assets/css/adminUsers.module.css";
 
 type UserNewRole = {
   uuid: string;
@@ -84,9 +85,9 @@ export default function AdminUsers({
   };
 
   return (
-    <>
-      <h1>Users</h1>
-      <table>
+    <div className={styles["container"]}>
+      <h1 className={styles["title"]}>Users</h1>
+      <table className={styles["table"]}>
         <thead>
           <tr>
             <th></th>
@@ -107,7 +108,11 @@ export default function AdminUsers({
               );
 
               return (
-                <tr key={user.uuid} onClick={() => handleUserSelect(user)}>
+                <tr
+                  key={user.uuid}
+                  onClick={() => handleUserSelect(user)}
+                  className={styles["row"]}
+                >
                   <th>{index + 1}</th>
                   <td>{user.uuid}</td>
                   <td>{user.pseudo}</td>
@@ -126,7 +131,12 @@ export default function AdminUsers({
                       </select>
                     </td>
                   ) : (
-                    <td onClick={() => handleRoleClick(user)}>
+                    <td
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRoleClick(user);
+                      }}
+                    >
                       {getRole(user.role)}
                     </td>
                   )}
@@ -137,10 +147,24 @@ export default function AdminUsers({
                       "-" +
                       time.getFullYear()}
                   </td>
-                  <td>
-                    <button onClick={() => deleteUser(user)}>🗑️</button>
+                  <td className={styles["buttons-wrapper"]}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteUser(user);
+                      }}
+                      className={styles["button"]}
+                    >
+                      🗑️
+                    </button>
                     {newRole && (
-                      <button onClick={() => modifyUserRole(user)}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          modifyUserRole(user);
+                        }}
+                        className={styles["button"]}
+                      >
                         Modify
                       </button>
                     )}
@@ -150,6 +174,6 @@ export default function AdminUsers({
             })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }

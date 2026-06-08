@@ -5,6 +5,7 @@ import type { AdminPanelRoute, Music, User } from "../utils/Types";
 import apiFetch from "../utils/apiFetch";
 import AdminMusicsList from "../components/AdminMusicsList";
 import AdminUser from "../components/AdminUser";
+import styles from "../assets/css/adminPanel.module.css";
 
 export default function AdminPanel() {
   const [route, setRoute] = useState<AdminPanelRoute>({
@@ -54,7 +55,7 @@ export default function AdminPanel() {
   };
 
   return (
-    <>
+    <div className={styles["container"]}>
       <AdminUpperBar route={route} setRoute={setRoute} />
       {route.user && currentUser ? (
         <AdminUser user={currentUser} deleteMusic={deleteMusic} />
@@ -69,6 +70,6 @@ export default function AdminPanel() {
           setRoute={setRoute}
         />
       )}
-    </>
+    </div>
   );
 }
