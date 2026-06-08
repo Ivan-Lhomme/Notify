@@ -3,7 +3,11 @@ import type { UpperBarProps } from "../utils/PropsType";
 import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/upperBar.module.css";
 
-export default function UpperBar({ setRoute }: UpperBarProps) {
+export default function UpperBar({
+  setRoute,
+  search,
+  setSearch,
+}: UpperBarProps) {
   const artistRef = useRef(false);
   const adminRef = useRef(false);
   useEffect(() => {
@@ -17,40 +21,44 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
   }, []);
 
   const home = () => {
-    setRoute((route) => {
+    setSearch("");
+    setRoute((prev) => {
       return {
-        ...route,
+        ...prev,
         profile: false,
         playlist: false,
         createPlaylist: false,
+        search: false,
       };
     });
   };
 
   const profile = () => {
-    setRoute((route) => {
+    setSearch("");
+    setRoute((prev) => {
       return {
-        ...route,
+        ...prev,
         profile: true,
         playlist: false,
         createPlaylist: false,
+        search: false,
       };
     });
   };
 
   const queue = () => {
-    setRoute((route) => {
+    setRoute((prev) => {
       return {
-        ...route,
+        ...prev,
         queue: true,
       };
     });
   };
 
   const actualMusicInfo = () => {
-    setRoute((route) => {
+    setRoute((prev) => {
       return {
-        ...route,
+        ...prev,
         queue: false,
       };
     });
@@ -60,6 +68,34 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
     <div className={styles["container"]}>
       <button onClick={home}>🏠</button>
       <input
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+
+          if (e.target.value === "") {
+            setRoute((prev) => {
+              return {
+                ...prev,
+                profile: false,
+                playlist: false,
+                createPlaylist: false,
+                search: false,
+              };
+            });
+
+            return;
+          }
+
+          setRoute((prev) => {
+            return {
+              ...prev,
+              profile: false,
+              playlist: false,
+              createPlaylist: false,
+              search: true,
+            };
+          });
+        }}
         type="search"
         name="searchBar"
         id={styles["searchBar"]}

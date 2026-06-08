@@ -19,6 +19,7 @@ export default function Home() {
     profile: false,
     playlist: false,
     createPlaylist: false,
+    search: false,
     queue: true,
   });
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -42,12 +43,17 @@ export default function Home() {
     playing: false,
     number: -1,
   });
+  const [search, setSearch] = useState("");
 
   const setPlaylistRoute = () => {
-    setRoute({
-      ...route,
-      profile: false,
-      playlist: true,
+    setRoute((prev) => {
+      return {
+        ...prev,
+        profile: false,
+        playlist: true,
+        createPlaylist: false,
+        search: false,
+      };
     });
   };
 
@@ -58,6 +64,7 @@ export default function Home() {
         profile: false,
         playlist: false,
         createPlaylist: false,
+        search: false,
       };
     });
   };
@@ -107,7 +114,7 @@ export default function Home() {
 
   return (
     <div className={styles["home"]}>
-      <UpperBar setRoute={setRoute} />
+      <UpperBar setRoute={setRoute} search={search} setSearch={setSearch} />
 
       <div className={styles["middle"]}>
         <PlaylistBar
@@ -115,8 +122,18 @@ export default function Home() {
           setPlaylist={setPlaylist}
           setPlaylistRoute={setPlaylistRoute}
           setRoute={setRoute}
+          setSearch={setSearch}
         />
-        {route.profile ? (
+        {route.search ? (
+          <Musics
+            musics={musics.filter((music) =>
+              music.title.toLowerCase().includes(search.toLowerCase()),
+            )}
+            newQueue={newQueue}
+            playlistsFetch={playlistsFetch}
+            playlists={playlists}
+          />
+        ) : route.profile ? (
           <Profile />
         ) : route.playlist && playlist ? (
           <PlaylistInfo

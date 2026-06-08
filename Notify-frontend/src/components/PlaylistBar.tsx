@@ -6,14 +6,17 @@ export default function PlaylistBar({
   setPlaylist,
   setPlaylistRoute,
   setRoute,
+  setSearch,
 }: PlaylistBarProps) {
   const createPlaylist = () => {
+    setSearch("");
     setRoute((prev) => {
       return {
         ...prev,
         profile: false,
         playlist: false,
         createPlaylist: true,
+        search: false,
       };
     });
   };
@@ -30,6 +33,7 @@ export default function PlaylistBar({
             <div
               key={playlist.uuid}
               onClick={() => {
+                setSearch("");
                 setPlaylist(playlist);
                 setPlaylistRoute();
               }}

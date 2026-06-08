@@ -22,6 +22,7 @@ export type PlaylistBarProps = {
   setPlaylist: Dispatch<SetStateAction<Playlist | null>>;
   setPlaylistRoute: Function;
   setRoute: Dispatch<SetStateAction<HomeRoute>>;
+  setSearch: Dispatch<SetStateAction<string>>;
 };
 
 export type PlaylistProps = {
@@ -33,6 +34,8 @@ export type PlaylistProps = {
 
 export type UpperBarProps = {
   setRoute: Dispatch<SetStateAction<HomeRoute>>;
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 };
 
 export type QueueProps = {
