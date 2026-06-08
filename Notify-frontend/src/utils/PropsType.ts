@@ -93,3 +93,7 @@ export type AdminUserProps = {
   user: User;
   deleteMusic: Function;
 };
+
+export type ActualMusicInfoProps = {
+  currentMusic: Music;
+};

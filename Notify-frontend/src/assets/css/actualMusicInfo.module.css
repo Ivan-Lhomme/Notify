@@ -1,0 +1,8 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.container h2 {
+  color: #f7971d;
+}

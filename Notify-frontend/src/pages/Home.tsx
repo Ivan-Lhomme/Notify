@@ -175,7 +175,7 @@ export default function Home() {
         {route.queue ? (
           <Queue queue={queue} actualMusic={actualMusic} />
         ) : (
-          <ActualMusicInfo />
+          <ActualMusicInfo currentMusic={actualMusic.music} />
         )}
       </div>
 
