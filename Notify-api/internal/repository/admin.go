@@ -47,3 +47,9 @@ func Clear_twofa_ticket(db *sql.DB) {
 
 	db.Exec(query, time.Now().Add(-5 * time.Minute))
 }
+
+func Delete_music_admin(db *sql.DB, music_uuid string) {
+	query := `DELETE FROM musics WHERE id=$1`
+
+	db.Exec(query, music_uuid)
+}

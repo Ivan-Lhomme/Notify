@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	"notify-api/internal/middleware"
 	"notify-api/internal/models"
@@ -126,6 +127,27 @@ func Admin(app fiber.Router, db *sql.DB) {
 
     admin.Get("/clear2faticket", func (c fiber.Ctx) error {
         repository.Clear_twofa_ticket(db)
+
+        return c.End()
+    })
+
+    admin.Post("/deletemusic", func (c fiber.Ctx) error {
+        var music models.Music
+		err := unmarshall_music(c, &music)
+
+		if err != nil {
+			fmt.Printf("Error in admin/deletemusic on unmarshall : \n%v\n", err)
+			return c.SendStatus(400)
+		}
+
+        repository.Delete_music_admin(db, music.UUID)
+        
+        music_file_name := os.Getenv("MUSIC_PATH") + music.UUID + "_" + music.Title + ".ogg"
+		err = os.Remove(music_file_name)
+		if err != nil {
+			fmt.Printf("Error in admin/deletemusic on file delete : \n%v\n", err)
+			return c.SendStatus(500)
+		}
 
         return c.End()
     })
