@@ -11,7 +11,8 @@ type User struct {
 	Pseudo     string		`json:"pseudo"`
 	Email      string		`json:"email"`
 	Password   string		`json:"password"`
-	Role       int		`json:"role"`
+	Role       int			`json:"role"`
+	Musics     []Music      `json:"musics"`
 	Created_at time.Time	`json:"created_at"`
 }
 
