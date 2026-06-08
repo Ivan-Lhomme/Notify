@@ -89,10 +89,10 @@
   position: absolute;
 
   right: 0;
-  top: calc(100% - 10px);
+  bottom: calc(100%);
 
   min-width: 220px;
-  max-height: 250px;
+  max-height: 80px;
 
   overflow-y: auto;
 
