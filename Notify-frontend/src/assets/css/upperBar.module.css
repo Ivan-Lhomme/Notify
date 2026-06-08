@@ -76,6 +76,13 @@
   background: #ff4b15 !important;
 }
 
+.adminBtn {
+  background: #2563eb !important;
+}
+.adminBtn:hover {
+  background: #0543eb !important;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .container {

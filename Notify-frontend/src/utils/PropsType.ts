@@ -1,10 +1,12 @@
 import type { Dispatch, SetStateAction } from "react";
 import type {
   ActualMusic,
+  AdminPanelRoute,
   HomeRoute,
   Music,
   Playlist,
   Ticket2fa,
+  User,
 } from "./Types";
 
 export type PlaylistsProps = {
@@ -64,4 +66,27 @@ export type PreRegisterProps = {
 export type RegisterProps = {
   ticket: Ticket2fa;
   setTicket: React.Dispatch<React.SetStateAction<Ticket2fa>>;
+};
+
+export type AdminUpperBarProps = {
+  route: AdminPanelRoute;
+  setRoute: React.Dispatch<React.SetStateAction<AdminPanelRoute>>;
+};
+
+export type AdminMusicsListProps = {
+  musics: Music[];
+  deleteMusic: Function;
+};
+
+export type AdminUsersProps = {
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  reloadUsers: Function;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setRoute: React.Dispatch<React.SetStateAction<AdminPanelRoute>>;
+};
+
+export type AdminUserProps = {
+  user: User;
+  deleteMusic: Function;
 };

@@ -40,3 +40,17 @@ export type ActualMusic = {
   playing: boolean;
   number: number;
 };
+
+export type User = {
+  uuid: string;
+  pseudo: string;
+  email: string;
+  role: number;
+  musics?: Music[];
+  created_at: string;
+};
+
+export type AdminPanelRoute = {
+  musics: boolean;
+  user: boolean;
+};

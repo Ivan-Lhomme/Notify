@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Home from "./pages/Home";
 import Upload from "./pages/Upload";
 import Register from "./pages/Register";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -17,6 +18,24 @@ function App() {
             element={
               <ProtectedRoute reqAuth="user">
                 <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute reqAuth="artist">
+                <Upload />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute reqAuth="admin">
+                <AdminPanel />
               </ProtectedRoute>
             }
           />
@@ -35,15 +54,6 @@ function App() {
               <NotLogedRoute>
                 <Register />
               </NotLogedRoute>
-            }
-          />
-
-          <Route
-            path="/upload"
-            element={
-              <ProtectedRoute reqAuth="artist">
-                <Upload />
-              </ProtectedRoute>
             }
           />
           <Route path="/*" element={<Navigate to="/" />} />

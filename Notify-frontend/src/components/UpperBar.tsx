@@ -5,9 +5,14 @@ import styles from "../assets/css/upperBar.module.css";
 
 export default function UpperBar({ setRoute }: UpperBarProps) {
   const artistRef = useRef(false);
+  const adminRef = useRef(false);
   useEffect(() => {
     apiFetch("/api/artist", "GET").then(
       (res) => (artistRef.current = res.status === 404),
+    );
+
+    apiFetch("/api/admin", "GET").then(
+      (res) => (adminRef.current = res.status === 404),
     );
   }, []);
 
@@ -69,6 +74,14 @@ export default function UpperBar({ setRoute }: UpperBarProps) {
           onClick={() => (window.location.href = "/upload")}
         >
           Upload
+        </button>
+      )}
+      {adminRef.current && (
+        <button
+          className={styles["adminBtn"]}
+          onClick={() => (window.location.href = "/admin")}
+        >
+          Admin Panel
         </button>
       )}
     </div>
