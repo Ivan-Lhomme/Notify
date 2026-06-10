@@ -11,3 +11,8 @@ type Check_cfg struct {
 	Email    bool
 	Password bool
 }
+
+type User_exist_cfg struct {
+	Pseudo bool
+	Email  bool
+}

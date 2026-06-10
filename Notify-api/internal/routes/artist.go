@@ -53,6 +53,9 @@ func Artist(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
+		var exist bool
+		if exist, res_mess.Message = utils.Check_music_exist(db, &c, music_title); exist { return c.JSON(res_mess) }
+
 		fileType := strings.Split(music_file_header.Header.Get("Content-Type"), "/")
 		
 		if (fileType[1] == "ogg") {user := c.Locals("user").(models.User)

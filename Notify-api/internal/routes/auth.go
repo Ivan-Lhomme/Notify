@@ -199,6 +199,9 @@ func Auth(app fiber.Router, db *sql.DB) {
 			return c.JSON(res_mess)
 		}
 
+		var exist bool
+		if exist, res_mess.Message = utils.Check_user_info_exist(db, &c, user_receive, utils.User_exist_cfg{ Pseudo: true, Email: true }); exist { return c.JSON(res_mess) }
+
 		user_uuid := repository.Register_user_tmp(db, user_receive)
 		if user_uuid == "" {
 			fmt.Printf("Error in auth/preregister on querie 1")

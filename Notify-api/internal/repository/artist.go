@@ -95,3 +95,11 @@ func Modify_music_play_count(db *sql.DB, music models.Music) error {
 
 	return nil
 }
+
+func Music_exist(db *sql.DB, title string) bool {
+	query := `SELECT * FROM musics WHERE title=$1`
+
+	_, err := db.Exec(query, title)
+
+	return err != nil
+}

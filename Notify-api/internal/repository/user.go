@@ -163,3 +163,27 @@ func Get_one_music(db *sql.DB, music_uuid string) (models.Music, error) {
 
 	return music, nil
 }
+
+func Pseudo_exist(db *sql.DB, pseudo string) bool {
+	query := `SELECT * FROM users WHERE pseudo=$1`
+
+	_, err := db.Exec(query, pseudo)
+
+	return err != nil
+}
+
+func Email_exist(db *sql.DB, email string) bool {
+	query := `SELECT * FROM users WHERE email=$1`
+
+	_, err := db.Exec(query, email)
+
+	return err != nil
+}
+
+func Playlist_exist(db *sql.DB, name, uuid_owner string) bool {
+	query := `SELECT * FROM playlists WHERE name=$1 AND id_owner=$2`
+
+	_, err := db.Exec(query, name, uuid_owner)
+
+	return err != nil
+}

@@ -1,10 +1,12 @@
 package utils
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 
 	"notify-api/internal/models"
+	"notify-api/internal/repository"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -57,4 +59,40 @@ func Check_user_receive(u *models.User, cfg Check_cfg) string {
 	}
 
 	return ""
+}
+
+func Check_user_info_exist(db *sql.DB, c *fiber.Ctx, user_info models.User, cfg User_exist_cfg) (bool, string) {
+	if cfg.Pseudo {
+		if repository.Pseudo_exist(db, user_info.Pseudo) {
+			(*c).Status(400)
+			return true, "Pseudo already exist."
+		}
+	}
+
+	if cfg.Email {
+		if repository.Email_exist(db, user_info.Email) {
+			(*c).Status(400)
+			return true, "Email already exist."
+		}
+	}
+
+	return false, ""
+}
+
+func Check_playlist_exist(db *sql.DB, c *fiber.Ctx, playlist models.Playlist) (bool, string) {
+	if repository.Playlist_exist(db, playlist.Name, playlist.Id_owner) {
+		(*c).Status(400)
+		return true, "Playlist already exist."
+	}
+
+	return false, ""
+}
+
+func Check_music_exist(db *sql.DB, c *fiber.Ctx, title string) (bool, string) {
+	if repository.Music_exist(db, title) {
+		(*c).Status(400)
+		return true, "Music already exist."
+	}
+
+	return false, ""
 }

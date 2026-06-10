@@ -41,6 +41,11 @@ func User(app fiber.Router, db *sql.DB) {
 		user := c.Locals("user").(models.User)
 		user.Modify_user(new_user_data)
 
+		if new_user_data.Pseudo != user.Pseudo {
+			var exist bool
+			if exist, res_mess.Message = utils.Check_user_info_exist(db, &c, new_user_data, utils.User_exist_cfg{ Pseudo: true }); exist { return c.JSON(res_mess) }
+		}
+
 		err2 := repository.Modify_user(db, user)
 		if err2 != nil {
 			fmt.Printf("Error in user/modify on querie : \n%v\n", err)
@@ -105,6 +110,9 @@ func User(app fiber.Router, db *sql.DB) {
 		user := c.Locals("user").(models.User)
 		playlist.Id_owner = user.UUID
 
+		var exist bool
+		if exist, res_mess.Message = utils.Check_playlist_exist(db, &c, playlist); exist { return c.JSON(res_mess) }
+
 		err = repository.Create_playlist(db, playlist)
 		if err != nil {
 			fmt.Printf("Error in user/createplaylist on querie : \n%v\n", err)
@@ -150,6 +158,9 @@ func User(app fiber.Router, db *sql.DB) {
 		user := c.Locals("user").(models.User)
 
 		new_playlist_data.Id_owner = user.UUID
+		var exist bool
+		if exist, res_mess.Message = utils.Check_playlist_exist(db, &c, new_playlist_data); exist { return c.JSON(res_mess) }
+
 		playlist, err := repository.Get_one_playlist(db, new_playlist_data)
 
 		if err != nil {
