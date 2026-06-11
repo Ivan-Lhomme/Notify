@@ -97,9 +97,14 @@ func Modify_music_play_count(db *sql.DB, music models.Music) error {
 }
 
 func Music_exist(db *sql.DB, title string) bool {
-	query := `SELECT * FROM musics WHERE title=$1`
+	query := `SELECT EXISTS(SELECT * FROM musics WHERE LOWER(title)=LOWER($1))`
 
-	_, err := db.Exec(query, title)
+	var exist bool
+	err := db.QueryRow(query, title).Scan(&exist)
 
-	return err != nil
+	if err != nil {
+		return false
+	}
+
+	return exist
 }

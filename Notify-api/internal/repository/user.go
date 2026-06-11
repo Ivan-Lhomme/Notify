@@ -165,25 +165,40 @@ func Get_one_music(db *sql.DB, music_uuid string) (models.Music, error) {
 }
 
 func Pseudo_exist(db *sql.DB, pseudo string) bool {
-	query := `SELECT * FROM users WHERE pseudo=$1`
+	query := `SELECT EXISTS(SELECT * FROM users WHERE LOWER(pseudo)=LOWER($1))`
 
-	_, err := db.Exec(query, pseudo)
+	var exist bool
+	err := db.QueryRow(query, pseudo).Scan(&exist)
 
-	return err != nil
+	if err != nil {
+		return false
+	}
+
+	return exist
 }
 
 func Email_exist(db *sql.DB, email string) bool {
-	query := `SELECT * FROM users WHERE email=$1`
+	query := `SELECT EXISTS(SELECT * FROM users WHERE LOWER(email)=LOWER($1))`
 
-	_, err := db.Exec(query, email)
+	var exist bool
+	err := db.QueryRow(query, email).Scan(&exist)
 
-	return err != nil
+	if err != nil {
+		return false
+	}
+
+	return exist
 }
 
 func Playlist_exist(db *sql.DB, name, uuid_owner string) bool {
-	query := `SELECT * FROM playlists WHERE name=$1 AND id_owner=$2`
+	query := `SELECT EXISTS(SELECT * FROM playlists WHERE LOWER(name)=LOWER($1) AND id_owner=$2)`
 
-	_, err := db.Exec(query, name, uuid_owner)
+	var exist bool
+	err := db.QueryRow(query, name, uuid_owner).Scan(&exist)
 
-	return err != nil
+	if err != nil {
+		return false
+	}
+
+	return exist
 }
