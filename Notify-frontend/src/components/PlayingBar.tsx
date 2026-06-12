@@ -4,11 +4,16 @@ import { apiLocation } from "../utils/apiLocation";
 import type { PlayingBarProps } from "../utils/PropsType";
 import styles from "../assets/css/playingBar.module.css";
 import { GrPowerCycle } from "react-icons/gr";
+import { IoShuffle } from "react-icons/io5";
+import type { Music } from "../utils/Types";
 
 export default function PlayingBar({
   queue,
   actualMusic,
   setActualMusic,
+  shuffle,
+  setShuffle,
+  shuffled,
 }: PlayingBarProps) {
   const musicRef = useRef<HTMLAudioElement>(null);
   const [sliding, setSliding] = useState(false);
@@ -115,17 +120,20 @@ export default function PlayingBar({
   };
 
   const handleMusicEnd = async () => {
-    if (!cycle) {
-      const newMusicNumber = actualMusic.number + 1;
-      const newMusic = queue[newMusicNumber];
+    const newMusicNumber = actualMusic.number + 1;
+    const newMusic = queue[newMusicNumber];
 
-      if (!newMusic || !musicRef.current) {
-        setActualMusic((prev) => {
-          return { ...prev, playing: false };
-        });
+    if (shuffle && !newMusic) {
+      setToMusic(shuffled());
+      return;
+    }
 
-        return;
-      }
+    if (!cycle && !newMusic) {
+      setActualMusic((prev) => {
+        return { ...prev, playing: false };
+      });
+
+      return;
     }
 
     nextMusic();
@@ -134,6 +142,11 @@ export default function PlayingBar({
   const nextMusic = async () => {
     const musicNumber =
       actualMusic.number + 1 < queue.length ? actualMusic.number + 1 : 0;
+
+    if (shuffle && musicNumber === 0) {
+      setToMusic(shuffled());
+      return;
+    }
 
     const newMusic = queue[musicNumber];
 
@@ -195,6 +208,27 @@ export default function PlayingBar({
     });
   };
 
+  const setToMusic = async (music: Music) => {
+    if (!musicRef.current) return;
+
+    await apiFetch("/refresh", "GET");
+    musicRef.current.src = `${apiLocation}/api/user/play/${music.uuid}`;
+
+    await musicRef.current.play();
+
+    music.duration = musicRef.current.duration;
+    setActualMusic((prev) => {
+      return {
+        ...prev,
+        music: music,
+        progress: "0",
+        currentTime: "-:--",
+        playing: true,
+        number: 0,
+      };
+    });
+  };
+
   useEffect(() => {
     if (!navigator.mediaSession) return;
 
@@ -231,6 +265,10 @@ export default function PlayingBar({
   return (
     <div className={styles["music-player"]}>
       <div className={styles["controls"]}>
+        <button onClick={() => setShuffle((prev) => !prev)}>
+          {shuffle ? <IoShuffle color="blue" /> : <IoShuffle />}
+        </button>
+
         <button onClick={previousMusic}>⏮️</button>
         <button
           className={styles["play-btn"]}
@@ -247,7 +285,7 @@ export default function PlayingBar({
         <button onClick={nextMusic}>⏭️</button>
 
         <button onClick={() => setCycle((prev) => !prev)}>
-          {cycle ? <GrPowerCycle color="green" /> : <GrPowerCycle />}
+          {cycle ? <GrPowerCycle color="blue" /> : <GrPowerCycle />}
         </button>
       </div>
 

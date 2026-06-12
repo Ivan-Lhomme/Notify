@@ -48,6 +48,9 @@ export type PlayingBarProps = {
   queue: Music[];
   actualMusic: ActualMusic;
   setActualMusic: React.Dispatch<React.SetStateAction<ActualMusic>>;
+  shuffle: boolean;
+  setShuffle: React.Dispatch<React.SetStateAction<boolean>>;
+  shuffled: Function;
 };
 
 export type MusicsProps = {

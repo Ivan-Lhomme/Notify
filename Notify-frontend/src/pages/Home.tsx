@@ -45,6 +45,7 @@ export default function Home() {
     number: -1,
   });
   const [search, setSearch] = useState("");
+  const [shuffle, setShuffle] = useState(false);
 
   const setPlaylistRoute = () => {
     setRoute((prev) => {
@@ -70,7 +71,25 @@ export default function Home() {
     });
   };
 
-  const newQueue = (queue: Music[]) => {
+  const newQueue = (queue: Music[]): Music => {
+    if (shuffle) {
+      const shuffledQueue: Music[] = [];
+
+      while (queue.length > 1) {
+        const musicSelectNumber = Math.floor(Math.random() * queue.length);
+        queue = queue.filter((music, index) => {
+          if (index !== musicSelectNumber) {
+            return music;
+          }
+
+          shuffledQueue.push(music);
+        });
+      }
+
+      shuffledQueue.push(queue[0]);
+      queue = shuffledQueue;
+    }
+
     setQueue(queue);
     if (queue.length > 0)
       setActualMusic({
@@ -78,6 +97,8 @@ export default function Home() {
         music: queue[0],
         number: 0,
       });
+
+    return queue[0];
   };
 
   const playlistsFetch = () => {
@@ -102,6 +123,8 @@ export default function Home() {
     apiFetch("/api/user/musics", "GET").then((res) =>
       res.json().then((body) => setMusics(body.data)),
     );
+
+  const shuffled = (): Music => newQueue(queue);
 
   useEffect(() => {
     playlistsFetch();
@@ -188,6 +211,9 @@ export default function Home() {
         queue={queue}
         actualMusic={actualMusic}
         setActualMusic={setActualMusic}
+        shuffle={shuffle}
+        setShuffle={setShuffle}
+        shuffled={shuffled}
       />
     </div>
   );
