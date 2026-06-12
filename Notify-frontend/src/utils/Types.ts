@@ -16,6 +16,7 @@ export type Music = {
   duration: number;
   bitrate: number;
   size: number;
+  liked: boolean;
   upload_at: string;
 };
 

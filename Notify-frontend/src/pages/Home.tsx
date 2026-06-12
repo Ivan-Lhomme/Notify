@@ -36,6 +36,7 @@ export default function Home() {
       duration: 0,
       bitrate: 0,
       size: 0,
+      liked: false,
       upload_at: "",
     },
     progress: "0",
@@ -97,16 +98,17 @@ export default function Home() {
     );
   };
 
-  const fetch = () => {
-    playlistsFetch();
-
+  const musicFetch = () =>
     apiFetch("/api/user/musics", "GET").then((res) =>
       res.json().then((body) => setMusics(body.data)),
     );
 
+  useEffect(() => {
+    playlistsFetch();
+    musicFetch();
+
     chargeRef.current = true;
-  };
-  useEffect(fetch, []);
+  }, []);
 
   if (!chargeRef) {
     return <p>Loading...</p>;
@@ -131,6 +133,7 @@ export default function Home() {
             )}
             newQueue={newQueue}
             playlistsFetch={playlistsFetch}
+            musicsFetch={musicFetch}
             playlists={playlists}
           />
         ) : route.profile ? (
@@ -141,6 +144,7 @@ export default function Home() {
             newQueue={newQueue}
             resetRoute={resetRoute}
             playlistsFetch={playlistsFetch}
+            musicsFetch={musicFetch}
           />
         ) : route.createPlaylist ? (
           <CreatePlaylist
@@ -166,6 +170,7 @@ export default function Home() {
                 musics={musics}
                 newQueue={newQueue}
                 playlistsFetch={playlistsFetch}
+                musicsFetch={musicFetch}
                 playlists={playlists}
               />
             )}

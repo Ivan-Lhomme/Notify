@@ -2,11 +2,13 @@ import type { MusicsProps } from "../utils/PropsType";
 import { useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/musics.module.css";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function Musics({
   musics,
   newQueue,
   playlistsFetch,
+  musicsFetch,
   playlists,
   limit,
 }: MusicsProps) {
@@ -21,6 +23,23 @@ export default function Musics({
 
     setShowSelectPlaylist(false);
     playlistsFetch();
+  };
+
+  const liked = async (musicUuid: string) => {
+    const res = await apiFetch(`/api/user/liked/${musicUuid}`, "GET");
+
+    if (res.ok) {
+      playlistsFetch();
+      musicsFetch();
+    }
+  };
+  const unliked = async (musicUuid: string) => {
+    const res = await apiFetch(`/api/user/unliked/${musicUuid}`, "GET");
+
+    if (res.ok) {
+      playlistsFetch();
+      musicsFetch();
+    }
   };
 
   return (
@@ -54,19 +73,34 @@ export default function Musics({
 
                   {showSelectPlaylist && (
                     <div>
-                      {playlists.map((playlist) => (
-                        <p
-                          key={playlist.uuid}
-                          onClick={() => handleSelectPlaylist(playlist.uuid)}
-                        >
-                          {playlist.name}
-                        </p>
-                      ))}
+                      {playlists.map((playlist) => {
+                        if (playlist.name !== "Liked") {
+                          return (
+                            <p
+                              key={playlist.uuid}
+                              onClick={() =>
+                                handleSelectPlaylist(playlist.uuid)
+                              }
+                            >
+                              {playlist.name}
+                            </p>
+                          );
+                        }
+                      })}
                     </div>
                   )}
                 </>
               )}
               <button onClick={() => setShowSelectPlaylist(true)}>➕</button>
+              {music.liked ? (
+                <button onClick={() => unliked(music.uuid)}>
+                  <FaHeart />
+                </button>
+              ) : (
+                <button onClick={() => liked(music.uuid)}>
+                  <FaRegHeart />
+                </button>
+              )}
             </div>
           </div>
         );

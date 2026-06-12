@@ -11,6 +11,7 @@ type Music struct {
 	Duration     int    	`json:"duration"`
 	Bitrate      int    	`json:"bitrate"`
 	Size         int    	`json:"size"`
+	Liked        bool       `json:"liked"`
 	Upload_at    time.Time 	`json:"upload_at"`
 }
 

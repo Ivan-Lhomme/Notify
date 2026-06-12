@@ -69,7 +69,8 @@ func Get_all_playlists(db *sql.DB, owner_uuid string) ([]models.Playlist, error)
 				log.Println(err)
 				return []models.Playlist{}, err
 			}
-			
+
+			music.Liked = Music_is_liked(db, owner_uuid, music.UUID)
 			playlist.Musics = append(playlist.Musics, music)
 		}
 		
@@ -145,6 +146,7 @@ func Get_all_musics_in_playlist(db *sql.DB, playlist models.Playlist) ([]models.
 			return []models.Music{}, err
 		}
 
+		music.Liked = Music_is_liked(db, playlist.Id_owner, music.UUID)
 		musics = append(musics, music)
 	}
 
@@ -195,6 +197,33 @@ func Playlist_exist(db *sql.DB, name, uuid_owner string) bool {
 
 	var exist bool
 	err := db.QueryRow(query, name, uuid_owner).Scan(&exist)
+
+	if err != nil {
+		return false
+	}
+
+	return exist
+}
+
+func Get_liked_uuid(db *sql.DB, user_uuid string) (string, error) {
+	query := `SELECT id FROM playlists WHERE id_owner=$1 AND name='Liked'`
+
+	var uuid string
+	err := db.QueryRow(query, user_uuid).Scan(&uuid)
+
+	return uuid, err
+}
+
+func Music_is_liked(db *sql.DB, user_uuid, music_uuid string) bool {
+	liked_uuid, err := Get_liked_uuid(db, user_uuid)
+	if err != nil {
+		return false
+	}
+
+	query := `SELECT EXISTS(SELECT * FROM music_in_playlist WHERE id_playlist=$1 AND id_music=$2)`
+
+	var exist bool
+	err = db.QueryRow(query, liked_uuid, music_uuid).Scan(&exist)
 
 	if err != nil {
 		return false

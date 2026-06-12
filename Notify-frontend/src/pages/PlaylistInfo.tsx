@@ -3,12 +3,14 @@ import apiFetch from "../utils/apiFetch";
 import type { PlaylistProps } from "../utils/PropsType";
 import type { Music } from "../utils/Types";
 import styles from "../assets/css/playlist.module.css";
+import { FaHeart } from "react-icons/fa";
 
 export default function PlaylistInfo({
   playlist,
   newQueue,
   resetRoute,
   playlistsFetch,
+  musicsFetch,
 }: PlaylistProps) {
   const [playlistName, setPlaylistName] = useState(playlist.name);
   const [modifyingName, setModifyingName] = useState(false);
@@ -60,6 +62,15 @@ export default function PlaylistInfo({
     }
   };
 
+  const unliked = async (musicUuid: string) => {
+    const res = await apiFetch(`/api/user/unliked/${musicUuid}`, "GET");
+
+    if (res.ok) {
+      playlistsFetch();
+      musicsFetch();
+    }
+  };
+
   return (
     <div className={styles["playlist"]}>
       <h1>
@@ -70,24 +81,39 @@ export default function PlaylistInfo({
             onChange={(e) => setPlaylistName(e.target.value)}
             onKeyDown={handleEnterPress}
           />
-        ) : (
+        ) : playlist.name !== "Liked" ? (
           <p onClick={() => setModifyingName(true)}>{playlistName}</p>
+        ) : (
+          <p>{playlistName}</p>
         )}
         {playlist.private && " 🔒"}
       </h1>
-      <button onClick={handlePlaylistDelete}>🗑️</button>
+      {playlist.name !== "Liked" && (
+        <button onClick={handlePlaylistDelete}>🗑️</button>
+      )}
       <button onClick={() => newQueue(playlist.musics)}>▶️</button>
       <div>
-        {playlist.musics &&
-          playlist.musics.map((music, index) => (
-            <div key={music.uuid + index}>
-              <p>{index + 1}</p>
-              <p>{music.title}</p>
-              <p>{music.duration}</p>
+        {playlist.musics && playlist.name !== "Liked"
+          ? playlist.musics.map((music, index) => (
+              <div key={music.uuid + index}>
+                <p>{index + 1}</p>
+                <p>{music.title}</p>
+                <p>{music.duration}</p>
 
-              <button onClick={() => handleDeleteMusic(music)}>🗑️</button>
-            </div>
-          ))}
+                <button onClick={() => handleDeleteMusic(music)}>🗑️</button>
+              </div>
+            ))
+          : playlist.musics.map((music, index) => (
+              <div key={music.uuid + index}>
+                <p>{index + 1}</p>
+                <p>{music.title}</p>
+                <p>{music.duration}</p>
+
+                <button onClick={() => unliked(music.uuid)}>
+                  <FaHeart />
+                </button>
+              </div>
+            ))}
       </div>
     </div>
   );

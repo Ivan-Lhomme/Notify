@@ -66,6 +66,14 @@ func Register_user(db *sql.DB, user models.User) error {
 
 	_, err := db.Exec(query,user.UUID, user.Pseudo, user.Email, user.Password)
 
+	if err != nil {
+		return nil
+	}
+
+	query = `INSERT INTO playlists (id_owner, name, private) VALUES ($1, $2, $3)`
+
+	_, err = db.Exec(query, user.UUID, "Liked", true)
+
 	return err
 }
 

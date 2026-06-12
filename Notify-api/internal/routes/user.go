@@ -135,6 +135,21 @@ func User(app fiber.Router, db *sql.DB) {
 
 		user := c.Locals("user").(models.User)
 		playlist.Id_owner = user.UUID
+		
+		playlist, err = repository.Get_one_playlist(db, playlist)
+
+		if err != nil {
+			fmt.Printf("Error in user/modifyplaylist on querie 1 : \n%v\n", err)
+			return c.SendStatus(400)
+		}
+
+		if playlist.Name == "Liked" {
+			res_mess.Message = "Can't delete liked playlist."
+
+			c.Status(400)
+			return c.JSON(res_mess)
+		}
+
 		err = repository.Delete_playlist(db, playlist)
 		if err != nil {
 			fmt.Printf("Error in user/deleteplaylist on querie : \n%v\n", err)
@@ -168,6 +183,13 @@ func User(app fiber.Router, db *sql.DB) {
 			return c.SendStatus(400)
 		}
 
+		if playlist.Name == "Liked" {
+			res_mess.Message = "Can't modify liked playlist."
+
+			c.Status(400)
+			return c.JSON(res_mess)
+		}
+
 		playlist.Modify_playlist(new_playlist_data)
 
 		err = repository.Modify_playlist(db, playlist)
@@ -183,7 +205,7 @@ func User(app fiber.Router, db *sql.DB) {
 	user.Get("/musics", func (c fiber.Ctx) error {
 		res_mess := utils.ReponseJSON{}
 
-		musics, err := repository.Get_all_musics(db)
+		musics, err := repository.Get_all_musics(db, (c.Locals("user").(models.User)).UUID)
 
 		if err != nil {
 			fmt.Printf("Error in user/musics on querie : \n%v\n", err)
@@ -298,6 +320,40 @@ func User(app fiber.Router, db *sql.DB) {
 		return c.SendFile(music_file_name, fiber.SendFile{
 			ByteRange: true,
 		})
+	})
+
+	user.Get("/liked/:uuid", func (c fiber.Ctx) error {
+		music_uuid := c.Params("uuid")
+		user_uuid := (c.Locals("user").(models.User)).UUID
+
+		liked_uuid, err := repository.Get_liked_uuid(db, user_uuid)
+		if err != nil {
+			return c.SendStatus(400)
+		}
+
+		err = repository.Add_music_to_playlist(db, liked_uuid, music_uuid)
+		if err != nil {
+			return c.SendStatus(500)
+		}
+
+		return c.End()
+	})
+
+	user.Get("/unliked/:uuid", func (c fiber.Ctx) error {
+		music_uuid := c.Params("uuid")
+		user_uuid := (c.Locals("user").(models.User)).UUID
+
+		liked_uuid, err := repository.Get_liked_uuid(db, user_uuid)
+		if err != nil {
+			return c.SendStatus(400)
+		}
+
+		err = repository.Delete_music_from_playlist(db, liked_uuid, music_uuid)
+		if err != nil {
+			return c.SendStatus(500)
+		}
+
+		return c.End()
 	})
 
 	//TODO

@@ -30,6 +30,7 @@ export type PlaylistProps = {
   newQueue: Function;
   resetRoute: Function;
   playlistsFetch: Function;
+  musicsFetch: Function;
 };
 
 export type UpperBarProps = {
@@ -53,6 +54,7 @@ export type MusicsProps = {
   musics: Music[];
   newQueue: Function;
   playlistsFetch: Function;
+  musicsFetch: Function;
   playlists: Playlist[];
   limit?: number;
 };

@@ -37,7 +37,7 @@ func Modify_user(db *sql.DB, new_user_data models.User) error {
 	return err
 }
 
-func Get_all_musics(db *sql.DB) ([]models.Music, error) {
+func Get_all_musics(db *sql.DB, user_uuid string) ([]models.Music, error) {
 	rows, err := db.Query("SELECT * FROM musics")
 	
 	if err != nil {
@@ -58,6 +58,7 @@ func Get_all_musics(db *sql.DB) ([]models.Music, error) {
 			return []models.Music{}, err
 		}
 
+		music.Liked = Music_is_liked(db, user_uuid, music.UUID)
 		musics = append(musics, music)
 	}
 
