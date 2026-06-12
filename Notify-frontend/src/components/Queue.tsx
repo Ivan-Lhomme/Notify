@@ -9,7 +9,7 @@ export default function Queue({ queue, actualMusic }: QueueProps) {
           <div
             className={
               styles[
-                actualMusic && actualMusic.music === music
+                actualMusic && actualMusic.music.uuid === music.uuid
                   ? "currentQueueItem"
                   : "queueItem"
               ]
