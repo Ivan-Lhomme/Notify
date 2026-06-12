@@ -3,6 +3,7 @@ import apiFetch from "../utils/apiFetch";
 import { apiLocation } from "../utils/apiLocation";
 import type { PlayingBarProps } from "../utils/PropsType";
 import styles from "../assets/css/playingBar.module.css";
+import { GrPowerCycle } from "react-icons/gr";
 
 export default function PlayingBar({
   queue,
@@ -11,6 +12,7 @@ export default function PlayingBar({
 }: PlayingBarProps) {
   const musicRef = useRef<HTMLAudioElement>(null);
   const [sliding, setSliding] = useState(false);
+  const [cycle, setCycle] = useState(true);
 
   const handleProgress = () => {
     if (!musicRef.current || sliding) return;
@@ -113,33 +115,20 @@ export default function PlayingBar({
   };
 
   const handleMusicEnd = async () => {
-    const musicNumber = actualMusic.number + 1;
-    const newMusic = queue[musicNumber];
+    if (!cycle) {
+      const newMusicNumber = actualMusic.number + 1;
+      const newMusic = queue[newMusicNumber];
 
-    if (!newMusic || !musicRef.current) {
-      setActualMusic((prev) => {
-        return { ...prev, playing: false };
-      });
+      if (!newMusic || !musicRef.current) {
+        setActualMusic((prev) => {
+          return { ...prev, playing: false };
+        });
 
-      return;
+        return;
+      }
     }
 
-    await apiFetch("/refresh", "GET");
-    musicRef.current.src = `${apiLocation}/api/user/play/${newMusic.uuid}`;
-
-    await musicRef.current.play();
-
-    newMusic.duration = musicRef.current.duration;
-    setActualMusic((prev) => {
-      return {
-        ...prev,
-        music: newMusic,
-        progress: "0",
-        currentTime: "-:--",
-        playing: false,
-        number: musicNumber,
-      };
-    });
+    nextMusic();
   };
 
   const nextMusic = async () => {
@@ -256,6 +245,10 @@ export default function PlayingBar({
           {actualMusic.playing ? "⏸️" : "▶️"}
         </button>
         <button onClick={nextMusic}>⏭️</button>
+
+        <button onClick={() => setCycle((prev) => !prev)}>
+          {cycle ? <GrPowerCycle color="green" /> : <GrPowerCycle />}
+        </button>
       </div>
 
       <div className={styles["progress-container"]}>
