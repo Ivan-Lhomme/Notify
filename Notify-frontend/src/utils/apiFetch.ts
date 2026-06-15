@@ -28,6 +28,7 @@ export default async function apiFetch(
   if (res.status === 401 && urlArg !== "/refresh") {
     const reqOptionTmp = {
       ...reqOption,
+      body: null,
       method: "GET",
     };
     res = await fetch(apiLocation + "/refresh", reqOptionTmp);
