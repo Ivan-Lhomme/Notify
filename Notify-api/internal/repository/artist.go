@@ -96,6 +96,17 @@ func Modify_music_play_count(db *sql.DB, music models.Music) error {
 	return nil
 }
 
+func Complete_music_info(db *sql.DB, music models.Music) error {
+	query := `UPDATE musics SET duration=$1, bitrate=$2 WHERE id=$3`
+
+	_, err := db.Exec(query, music.Duration, music.Bitrate, music.UUID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func Music_exist(db *sql.DB, title string) bool {
 	query := `SELECT EXISTS(SELECT * FROM musics WHERE LOWER(title)=LOWER($1))`
 

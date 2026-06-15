@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"os/exec"
 	"strings"
 
 	"notify-api/internal/middleware"
@@ -81,6 +82,43 @@ func Artist(app fiber.Router, db *sql.DB) {
 				fmt.Printf("Error in artist/uploadmusic on saving : \n%v\n", err)
 				repository.Delete_music(db, music)
 
+				return c.SendStatus(500)
+			}
+
+			cmd := exec.Command(
+				"ffprobe",
+				"-v", "quiet",
+				"-print_format", "json",
+				"-show_format",
+				music_file_name,
+			)
+
+			var (
+				output []byte
+				FFProbe_json utils.FFProbe_Output
+			)
+			output, err = cmd.Output()
+
+			err = json.Unmarshal(output, &FFProbe_json)
+
+			if err != nil {
+				fmt.Printf("An error occured artist/upload unmarshal process :\n\n%v\n", err)
+
+				repository.Delete_music(db, music)
+				os.Remove(music_file_name)
+				return c.SendStatus(500)
+			}
+
+			music.Bitrate = int(FFProbe_json.Format.Bit_rate)
+			music.Duration = int(FFProbe_json.Format.Duration)
+
+			err = repository.Complete_music_info(db, music)
+
+			if err != nil {
+				fmt.Printf("An error occured artist/upload query :\n\n%v\n", err)
+
+				repository.Delete_music(db, music)
+				os.Remove(music_file_name)
 				return c.SendStatus(500)
 			}
 		} else {

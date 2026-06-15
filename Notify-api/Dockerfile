@@ -1,5 +1,7 @@
 FROM golang:1.26-alpine
 
+RUN apk add --no-cache ffmpeg
+
 WORKDIR /app
 
 COPY go.* ./
