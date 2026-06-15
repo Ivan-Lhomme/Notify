@@ -6,6 +6,7 @@ import styles from "../assets/css/playingBar.module.css";
 import { GrPowerCycle } from "react-icons/gr";
 import { IoShuffle } from "react-icons/io5";
 import type { Music } from "../utils/Types";
+import { FaPause, FaPlay } from "react-icons/fa";
 
 export default function PlayingBar({
   queue,
@@ -269,7 +270,7 @@ export default function PlayingBar({
           {shuffle ? <IoShuffle color="blue" /> : <IoShuffle />}
         </button>
 
-        <button onClick={previousMusic}>⏮️</button>
+        <button onClick={previousMusic}>⏮</button>
         <button
           className={styles["play-btn"]}
           onClick={
@@ -280,9 +281,9 @@ export default function PlayingBar({
                 : startMusic
           }
         >
-          {actualMusic.playing ? "⏸️" : "▶️"}
+          {actualMusic.playing ? <FaPause /> : <FaPlay />}
         </button>
-        <button onClick={nextMusic}>⏭️</button>
+        <button onClick={nextMusic}>⏭</button>
 
         <button onClick={() => setCycle((prev) => !prev)}>
           {cycle ? <GrPowerCycle color="blue" /> : <GrPowerCycle />}

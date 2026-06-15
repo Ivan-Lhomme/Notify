@@ -2,7 +2,8 @@ import type { MusicsProps } from "../utils/PropsType";
 import { useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/musics.module.css";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaPlay, FaRegHeart } from "react-icons/fa";
+import { IoMdAdd } from "react-icons/io";
 
 export default function Musics({
   musics,
@@ -68,7 +69,7 @@ export default function Musics({
                       newQueue([music]);
                     }}
                   >
-                    ▶️
+                    <FaPlay />
                   </button>
 
                   {showSelectPlaylist && (
@@ -91,7 +92,9 @@ export default function Musics({
                   )}
                 </>
               )}
-              <button onClick={() => setShowSelectPlaylist(true)}>➕</button>
+              <button onClick={() => setShowSelectPlaylist(true)}>
+                <IoMdAdd color="blue" />
+              </button>
               {music.liked ? (
                 <button onClick={() => unliked(music.uuid)}>
                   <FaHeart />

@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import type { UpperBarProps } from "../utils/PropsType";
 import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/upperBar.module.css";
+import { GoHome, GoHomeFill } from "react-icons/go";
 
 export default function UpperBar({
+  route,
   setRoute,
   search,
   setSearch,
@@ -64,9 +66,13 @@ export default function UpperBar({
     });
   };
 
+  const isHome = (): boolean => {
+    return !route.createPlaylist && !route.playlist && !route.profile;
+  };
+
   return (
     <div className={styles["container"]}>
-      <button onClick={home}>🏠</button>
+      <button onClick={home}>{isHome() ? <GoHomeFill /> : <GoHome />}</button>
       <input
         value={search}
         onChange={(e) => {

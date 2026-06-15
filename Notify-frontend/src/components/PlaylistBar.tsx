@@ -1,5 +1,6 @@
 import type { PlaylistBarProps } from "../utils/PropsType";
 import styles from "../assets/css/playlistBar.module.css";
+import { IoMdAdd } from "react-icons/io";
 
 export default function PlaylistBar({
   playlists,
@@ -24,7 +25,7 @@ export default function PlaylistBar({
   return (
     <div className={styles["sidebarContainer"]}>
       <button onClick={createPlaylist} className={styles["createButton"]}>
-        +
+        <IoMdAdd />
       </button>
 
       <div className={styles["playlistList"]}>

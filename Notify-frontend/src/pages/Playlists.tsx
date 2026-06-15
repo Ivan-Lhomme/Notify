@@ -1,6 +1,7 @@
 import type { PlaylistsProps } from "../utils/PropsType";
 import { useState } from "react";
 import styles from "../assets/css/playlists.module.css";
+import { FaPlay } from "react-icons/fa";
 
 export default function Playlists({
   playlists,
@@ -36,7 +37,7 @@ export default function Playlists({
                     newQueue(playlist.musics ? playlist.musics : []);
                   }}
                 >
-                  ▶️
+                  <FaPlay color="white" />
                 </button>
               )}
             </div>

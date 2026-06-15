@@ -34,6 +34,7 @@ export type PlaylistProps = {
 };
 
 export type UpperBarProps = {
+  route: HomeRoute;
   setRoute: Dispatch<SetStateAction<HomeRoute>>;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;

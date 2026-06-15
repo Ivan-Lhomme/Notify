@@ -139,7 +139,12 @@ export default function Home() {
 
   return (
     <div className={styles["home"]}>
-      <UpperBar setRoute={setRoute} search={search} setSearch={setSearch} />
+      <UpperBar
+        route={route}
+        setRoute={setRoute}
+        search={search}
+        setSearch={setSearch}
+      />
 
       <div className={styles["middle"]}>
         <PlaylistBar

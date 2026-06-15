@@ -3,7 +3,8 @@ import apiFetch from "../utils/apiFetch";
 import type { PlaylistProps } from "../utils/PropsType";
 import type { Music } from "../utils/Types";
 import styles from "../assets/css/playlist.module.css";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaPlay } from "react-icons/fa";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 export default function PlaylistInfo({
   playlist,
@@ -89,9 +90,13 @@ export default function PlaylistInfo({
         {playlist.private && " 🔒"}
       </h1>
       {playlist.name !== "Liked" && (
-        <button onClick={handlePlaylistDelete}>🗑️</button>
+        <button onClick={handlePlaylistDelete}>
+          <RiDeleteBin5Fill />
+        </button>
       )}
-      <button onClick={() => newQueue(playlist.musics)}>▶️</button>
+      <button onClick={() => newQueue(playlist.musics)}>
+        <FaPlay />
+      </button>
       <div>
         {playlist.musics && playlist.name !== "Liked"
           ? playlist.musics.map((music, index) => (
@@ -100,10 +105,13 @@ export default function PlaylistInfo({
                 <p>{music.title}</p>
                 <p>{music.duration}</p>
 
-                <button onClick={() => handleDeleteMusic(music)}>🗑️</button>
+                <button onClick={() => handleDeleteMusic(music)}>
+                  <RiDeleteBin5Fill />
+                </button>
               </div>
             ))
-          : playlist.musics.map((music, index) => (
+          : playlist.musics &&
+            playlist.musics.map((music, index) => (
               <div key={music.uuid + index}>
                 <p>{index + 1}</p>
                 <p>{music.title}</p>
