@@ -30,6 +30,7 @@ export default function Login({
 
   const [loading, setLoading] = useState(false);
   const [code, setCode] = useState("");
+  const [numberOfSend, setNumberOfSend] = useState(0);
 
   const handleCode = (e: ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
@@ -45,25 +46,24 @@ export default function Login({
         valid: true,
       };
 
-      const res = await apiFetch("/auth/login2fa", "POST", newTicket);
+      const res = await apiFetch("/auth/login", "POST", newTicket);
 
-      if (res.status === 400) {
-        newTicket = {
-          ...newTicket,
-          valid: false,
-        };
-
-        setTicket(newTicket);
+      if (res.status === 400 && numberOfSend < 1) {
+        setNumberOfSend((prev) => prev + 1);
         setLoading(false);
         return;
       }
 
-      window.location.href = "/";
+      if (res.ok) window.location.href = "/";
+      else window.location.href = "/login";
     }
   };
 
   return (
     <div className={styles["form"]}>
+      {numberOfSend > 0 && (
+        <p className={styles["errMessage"]}>Wrong code, 1 more try left</p>
+      )}
       <label htmlFor="code">Enter the code</label>
       <input
         type="text"

@@ -36,7 +36,7 @@ export default function PreLogin({
 
   const preLogin = async () => {
     setLoading(true);
-    const res = await apiFetch("/auth/login", "POST", user);
+    const res = await apiFetch("/auth/prelogin", "POST", user);
 
     const body = await res.json();
 
