@@ -43,7 +43,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 	}
 
 //? -------------------------- Login --------------------------
-	app.Post("/login", func (c fiber.Ctx) error {
+	app.Post("/prelogin", func (c fiber.Ctx) error {
 		res_mess := utils.ReponseJSON{}
 		var user_receive models.User
 
@@ -103,7 +103,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 		return c.JSON(res_mess)
 	})
 
-	app.Post("/login2fa", func (c fiber.Ctx) error {
+	app.Post("/login", func (c fiber.Ctx) error {
 		res_mess := utils.ReponseJSON{}
 
 		var tt_receive models.Twofa_ticket
@@ -142,7 +142,7 @@ func Auth(app fiber.Router, db *sql.DB) {
 			tt.Nbr_of_ckeck = tt.Nbr_of_ckeck + 1
 			repository.Modify_nbr_of_check_twofa_ticket(db, tt)
 
-			return c.SendStatus(403)
+			return c.SendStatus(400)
 		}
 
 		err = repository.Delete_one_twofa_ticket(db, tt)
