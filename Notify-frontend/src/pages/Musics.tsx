@@ -93,7 +93,7 @@ export default function Musics({
                 </>
               )}
               <button onClick={() => setShowSelectPlaylist(true)}>
-                <IoMdAdd color="blue" />
+                <IoMdAdd color="blue" size="1.4rem" />
               </button>
               {music.liked ? (
                 <button onClick={() => unliked(music.uuid)}>

@@ -1,5 +1,6 @@
 import type { AdminMusicsListProps } from "../utils/PropsType";
 import styles from "../assets/css/adminMusicsList.module.css";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 export default function AdminMusicsList({
   musics,
@@ -25,7 +26,8 @@ export default function AdminMusicsList({
         </thead>
 
         <tbody>
-          {musics.length > 0 &&
+          {musics &&
+            musics.length > 0 &&
             musics.map((music, index) => {
               const time = new Date(music.upload_at);
 
@@ -56,7 +58,7 @@ export default function AdminMusicsList({
                       onClick={() => deleteMusic(music)}
                       className={styles["button"]}
                     >
-                      🗑️
+                      <RiDeleteBin5Fill />
                     </button>
                   </td>
                 </tr>

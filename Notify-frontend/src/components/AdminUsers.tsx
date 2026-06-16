@@ -3,6 +3,7 @@ import apiFetch from "../utils/apiFetch";
 import type { User } from "../utils/Types";
 import type { AdminUsersProps } from "../utils/PropsType";
 import styles from "../assets/css/adminUsers.module.css";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 type UserNewRole = {
   uuid: string;
@@ -155,7 +156,7 @@ export default function AdminUsers({
                       }}
                       className={styles["button"]}
                     >
-                      🗑️
+                      <RiDeleteBin5Fill />
                     </button>
                     {newRole && (
                       <button
