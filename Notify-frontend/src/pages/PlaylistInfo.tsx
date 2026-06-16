@@ -103,7 +103,11 @@ export default function PlaylistInfo({
               <div key={music.uuid + index}>
                 <p>{index + 1}</p>
                 <p>{music.title}</p>
-                <p>{music.duration}</p>
+                {music.duration === 0 ? (
+                  <p>-:--</p>
+                ) : (
+                  <p>{`${Math.floor(music.duration / 60)}:${music.duration % 60}`}</p>
+                )}
 
                 <button onClick={() => handleDeleteMusic(music)}>
                   <RiDeleteBin5Fill />
@@ -115,7 +119,11 @@ export default function PlaylistInfo({
               <div key={music.uuid + index}>
                 <p>{index + 1}</p>
                 <p>{music.title}</p>
-                <p>{music.duration}</p>
+                {music.duration === 0 ? (
+                  <p>-:--</p>
+                ) : (
+                  <p>{`${Math.floor(music.duration / 60)}:${music.duration % 60}`}</p>
+                )}
 
                 <button onClick={() => unliked(music.uuid)}>
                   <FaHeart />

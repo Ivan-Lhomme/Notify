@@ -34,9 +34,14 @@ export default function AdminMusicsList({
                   <th>{index + 1}</th>
                   <td>{music.uuid}</td>
                   <td>{music.title}</td>
-                  <td>{music.explicit}</td>
+                  <td></td>
+                  <td>{music.explicit ? "Yes" : "No"}</td>
                   <td>{music.plays_count}</td>
-                  <td>{music.duration}</td>
+                  {music.duration === 0 ? (
+                    <td>-:--</td>
+                  ) : (
+                    <td>{`${Math.floor(music.duration / 60)}:${music.duration % 60}`}</td>
+                  )}
                   <td>{music.bitrate}</td>
                   <td>{music.size}</td>
                   <td>
