@@ -1,6 +1,6 @@
 FROM golang:1.26-alpine
 
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache ffmpeg yt-dlp nodejs
 
 WORKDIR /app
 

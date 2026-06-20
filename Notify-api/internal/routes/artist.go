@@ -59,7 +59,8 @@ func Artist(app fiber.Router, db *sql.DB) {
 
 		fileType := strings.Split(music_file_header.Header.Get("Content-Type"), "/")
 		
-		if (fileType[1] == "ogg") {user := c.Locals("user").(models.User)
+		if (fileType[1] == "ogg") {
+			user := c.Locals("user").(models.User)
 			music := models.Music{
 				Id_publisher: user.UUID,
 				Title: music_title,
@@ -102,7 +103,7 @@ func Artist(app fiber.Router, db *sql.DB) {
 			err = json.Unmarshal(output, &FFProbe_json)
 
 			if err != nil {
-				fmt.Printf("An error occured artist/upload unmarshal process :\n\n%v\n", err)
+				fmt.Printf("An error occured artist/uploadmusic unmarshal process :\n\n%v\n", err)
 
 				repository.Delete_music(db, music)
 				os.Remove(music_file_name)
@@ -115,7 +116,7 @@ func Artist(app fiber.Router, db *sql.DB) {
 			err = repository.Complete_music_info(db, music)
 
 			if err != nil {
-				fmt.Printf("An error occured artist/upload query :\n\n%v\n", err)
+				fmt.Printf("An error occured artist/uploadmusic query :\n\n%v\n", err)
 
 				repository.Delete_music(db, music)
 				os.Remove(music_file_name)
@@ -125,6 +126,41 @@ func Artist(app fiber.Router, db *sql.DB) {
 			c.Status(400)
 			res_mess.Message = "This file isn't an ogg file."
 		}
+
+		return c.JSON(res_mess)
+	})
+
+	artist.Post("/ytupload", func (c fiber.Ctx) error {
+		res_mess := utils.ReponseJSON{}
+
+		var ytupload_req utils.Ytupload_req
+
+		err := json.Unmarshal(c.Body(), &ytupload_req)
+		if err != nil {
+			return c.SendStatus(400)
+		}
+
+		music_path := os.Getenv("MUSIC_PATH")
+
+		cmd := exec.Command(
+			"yt-dlp",
+			"-o", music_path + "%(title)s.%(ext)s",
+			"--js-runtimes", "node",
+			"--print", "after_move:filename",
+			ytupload_req.Url,
+		)
+
+		file_name_byte, err := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Println(err, string(file_name_byte))
+			return c.SendStatus(400)
+		}
+		file_path := strings.Split(strings.TrimSpace(string(file_name_byte)), music_path)
+		file_name := file_path[len(file_path) - 1]
+
+		music_file_name := music_path + file_name
+		user := c.Locals("user").(models.User)
+		go convert_music(user, db, ytupload_req.Music_title, music_file_name, music_path)
 
 		return c.JSON(res_mess)
 	})
@@ -276,4 +312,86 @@ func get_form_data(c fiber.Ctx, music_file_header **multipart.FileHeader, music_
 	*music_explicit = music_explicit_tmp
 
 	return nil
+}
+
+func convert_music(user models.User, db *sql.DB, music_title, music_file_name, music_path string) {
+	cmd := exec.Command(
+		"ffprobe",
+		"-v", "quiet",
+		"-print_format", "json",
+		"-show_format",
+		music_file_name,
+	)
+
+	var (
+		output []byte
+		FFProbe_json utils.FFProbe_Output
+	)
+	output, err := cmd.Output()
+	if err != nil {
+		fmt.Printf("An error occured artist/ytupload command exec :\n\n%v\n", err)
+		os.Remove(music_file_name)
+		return
+	}
+
+	err = json.Unmarshal(output, &FFProbe_json)
+	if err != nil {
+		fmt.Printf("An error occured artist/ytupload unmarshal process 1 :\n\n%v\n", err)
+		os.Remove(music_file_name)
+		return
+	}
+
+	
+	tmp_music_file_name := music_file_name + ".ogg"
+	cmd = exec.Command(
+		"ffmpeg",
+		"-i", music_file_name,
+		"-c:a", "libvorbis",
+		"-q:a", "2",
+		tmp_music_file_name,
+	)
+	
+	err = cmd.Run()
+	if err != nil {
+		fmt.Printf("Error in artist/ytupload on converting : \n%v\n", err)
+		return
+	}
+	
+	os.Remove(music_file_name)
+
+	cmd = exec.Command(
+		"ffprobe",
+		"-v", "quiet",
+		"-print_format", "json",
+		"-show_format",
+		tmp_music_file_name,
+	)
+
+	output, err = cmd.Output()
+
+	err = json.Unmarshal(output, &FFProbe_json)
+
+	if err != nil {
+		fmt.Printf("An error occured artist/ytupload unmarshal process 2 :\n\n%v\n", err)
+		os.Remove(tmp_music_file_name)
+		return
+	}
+
+	music := models.Music{
+		Id_publisher: user.UUID,
+		Title: music_title,
+		Explicit: false,
+		Duration: int(FFProbe_json.Format.Duration),
+		Bitrate: int(FFProbe_json.Format.Bit_rate),
+		Size: int(FFProbe_json.Format.Size),
+	}
+
+	music.UUID, err = repository.Add_music(db, music)
+	if err != nil {
+		fmt.Printf("Error in artist/ytupload on querie : \n%v\n", err)
+		os.Remove(tmp_music_file_name)
+	}
+
+	new_music_file_name := music_path + music.UUID + "_" + music.Title + ".ogg"
+	os.Rename(tmp_music_file_name, new_music_file_name)
 }

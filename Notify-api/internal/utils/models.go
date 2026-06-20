@@ -34,3 +34,8 @@ type Format struct {
 type FFProbe_Output struct {
 	Format Format `json:"format"`
 }
+
+type Ytupload_req struct {
+	Music_title string `json:"musicTitle"`
+	Url         string `json:"url"`
+}
