@@ -103,3 +103,10 @@ export type AdminUserProps = {
 export type ActualMusicInfoProps = {
   currentMusic: Music;
 };
+
+export type UploadProps = {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  errMessage: string;
+  setErrMessage: React.Dispatch<React.SetStateAction<string>>;
+};

@@ -1,3 +1,38 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.button {
+  margin-top: 12px;
+
+  height: 46px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #1db954;
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.button:hover {
+  background: #1ed760;
+  transform: scale(1.02);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
 .uploadForm {
   width: min(500px, 90%);
   margin: 40px auto;
@@ -23,7 +58,8 @@
 }
 
 /* Text input */
-.uploadForm input[type="text"] {
+.uploadForm input[type="text"],
+.uploadForm input[type="url"] {
   height: 44px;
 
   padding: 0 14px;
@@ -43,7 +79,8 @@
     box-shadow 0.2s ease;
 }
 
-.uploadForm input[type="text"]:focus {
+.uploadForm input[type="text"]:focus,
+.uploadForm input[type="url"]:focus {
   border-color: #1db954;
   box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
 }

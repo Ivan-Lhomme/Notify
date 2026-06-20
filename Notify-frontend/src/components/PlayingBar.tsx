@@ -80,10 +80,6 @@ export default function PlayingBar({
 
       return {
         ...prev,
-        music: {
-          ...prev.music,
-          duration: musicRef.current.duration,
-        },
         playing: true,
       };
     });
@@ -164,7 +160,6 @@ export default function PlayingBar({
 
     await musicRef.current.play();
 
-    newMusic.duration = musicRef.current.duration;
     setActualMusic((prev) => {
       return {
         ...prev,
@@ -196,7 +191,6 @@ export default function PlayingBar({
 
     await musicRef.current.play();
 
-    newMusic.duration = musicRef.current.duration;
     setActualMusic((prev) => {
       return {
         ...prev,
