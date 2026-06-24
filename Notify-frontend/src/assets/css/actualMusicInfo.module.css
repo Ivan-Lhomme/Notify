@@ -4,5 +4,8 @@
 }
 
 .container h2 {
+  width: 90%;
   color: #f7971d;
+  font-size: 80%;
+  overflow-wrap: break-word;
 }

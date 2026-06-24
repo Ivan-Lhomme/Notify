@@ -10,8 +10,6 @@
   min-height: 0;
   display: grid;
 
-  grid-template-columns: 0.1fr 0.9fr 0.45fr;
-
   gap: 10px;
 
   width: 100vw;
@@ -63,4 +61,16 @@
   border-radius: 1000px;
   background-color: #1f1f1f;
   margin: 0 auto 20px auto;
+}
+
+@media (min-width: 769px) {
+  .middle {
+    grid-template-columns: 0.1fr 0.9fr 0.45fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .middle {
+    grid-template-columns: 0.2fr 0.9fr 0.45fr;
+  }
 }

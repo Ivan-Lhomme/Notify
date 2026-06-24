@@ -31,6 +31,7 @@ export type PlaylistProps = {
   resetRoute: Function;
   playlistsFetch: Function;
   musicsFetch: Function;
+  isPhone: boolean;
 };
 
 export type UpperBarProps = {
@@ -38,6 +39,7 @@ export type UpperBarProps = {
   setRoute: Dispatch<SetStateAction<HomeRoute>>;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
+  isPhone: boolean;
 };
 
 export type QueueProps = {
@@ -109,4 +111,21 @@ export type UploadProps = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   errMessage: string;
   setErrMessage: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export type UpperBarButtonsProps = {
+  setRoute: Dispatch<SetStateAction<HomeRoute>>;
+  setSearch: Dispatch<SetStateAction<string>>;
+  styles: CSSModuleClasses;
+  artistRef: React.RefObject<boolean>;
+  adminRef: React.RefObject<boolean>;
+  closeMenu?: Function;
+};
+
+export type BurgerMenuProps = {
+  setRoute: Dispatch<SetStateAction<HomeRoute>>;
+  setSearch: Dispatch<SetStateAction<string>>;
+  styles: CSSModuleClasses;
+  artistRef: React.RefObject<boolean>;
+  adminRef: React.RefObject<boolean>;
 };

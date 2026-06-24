@@ -12,7 +12,6 @@
 
 /* Buttons */
 .container button {
-  background: #1db954;
   color: white;
   border: none;
   border-radius: 1000px;
@@ -29,21 +28,25 @@
   align-items: center;
 }
 
-.container button:hover {
+.container div button:hover {
   background: #1ed760;
-  transform: scale(1.05);
 }
 
-.container button:active {
+.container div button:active {
   transform: scale(0.98);
 }
 
 /* Home Button */
-.container button:first-child {
+.container > button:first-child {
+  background: #1db954;
   width: 44px;
   height: 44px;
   padding: 0;
   font-size: 20px;
+}
+
+.container > button:first-child:hover {
+  transform: scale(1.05);
 }
 
 /* Search Bar */
@@ -72,37 +75,121 @@
   box-shadow: 0 0 0 2px #1db954;
 }
 
-/* Upload Button */
-.uploadBtn {
-  background: #ff6b35 !important;
-}
-.uploadBtn:hover {
-  background: #ff4b15 !important;
-}
-
-.adminBtn {
-  background: #2563eb !important;
-}
-.adminBtn:hover {
-  background: #0543eb !important;
+.burgerCross {
+  cursor: pointer;
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
 }
 
-/* Mobile */
+.burgerMenu {
+  cursor: pointer;
+}
+
+.sideMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 10rem;
+  max-width: 80vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+
+  transform: translateX(10rem);
+  transition: transform 4s ease;
+
+  padding: 20px;
+
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.sideMenuOpen {
+  transform: translateX(0);
+}
+
+.hiddenMenu {
+  background: rgba(0, 0, 0, 0.3);
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 @media (max-width: 768px) {
+  #searchBar {
+    width: 100%;
+    max-width: none;
+  }
+
   .container {
     flex-wrap: wrap;
     gap: 8px;
     padding: 10px;
   }
 
-  #searchBar {
-    width: 100%;
-    order: 2;
-    max-width: none;
+  .container > div > div {
+    margin-top: 3rem;
   }
 
+  .container > div > div > button {
+    background: #121212;
+    width: 100%;
+    border-radius: 0;
+    border-bottom: 2px #1ed760 solid;
+  }
+
+  .uploadBtn {
+    border-bottom-color: #ff6b35 !important;
+  }
+  .uploadBtn:hover {
+    background: #ff4b15 !important;
+    border-bottom-color: #ff4b15 !important;
+  }
+
+  .adminBtn {
+    border-bottom-color: #2563eb !important;
+  }
+  .adminBtn:hover {
+    background: #0543eb !important;
+    border-bottom-color: #0543eb !important;
+  }
+}
+
+@media (min-width: 769px) {
   .container button {
-    padding: 8px 14px;
-    font-size: 13px;
+    background: #1db954;
+  }
+
+  .uploadBtn {
+    background: #ff6b35 !important;
+    border-bottom-color: #ff6b35 !important;
+  }
+  .uploadBtn:hover {
+    background: #ff4b15 !important;
+    border-bottom-color: #ff4b15 !important;
+  }
+
+  .adminBtn {
+    background: #2563eb !important;
+    border-bottom-color: #2563eb !important;
+  }
+  .adminBtn:hover {
+    background: #0543eb !important;
+    border-bottom-color: #0543eb !important;
+  }
+
+  .container > div {
+    display: flex;
+    gap: 12px;
+  }
+
+  .container > div > button:hover {
+    transform: scale(1.05);
   }
 }

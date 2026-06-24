@@ -2,6 +2,7 @@ import { useState } from "react";
 import UploadComp from "../components/Upload";
 import YtUpload from "../components/YtUpload";
 import styles from "../assets/css/upload.module.css";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
@@ -13,25 +14,27 @@ export default function Upload() {
         onClick={() => (window.location.href = "/")}
         className={styles["button"]}
       >
-        Back
+        <IoMdArrowBack size={30} />
       </button>
 
-      <div className={styles["container"]}>
-        <UploadComp
-          loading={loading}
-          setLoading={setLoading}
-          errMessage={errMessage}
-          setErrMessage={setErrorMessage}
-        />
+      <div className={styles["post-container"]}>
+        <div className={styles["container"]}>
+          <UploadComp
+            loading={loading}
+            setLoading={setLoading}
+            errMessage={errMessage}
+            setErrMessage={setErrorMessage}
+          />
 
-        <div />
+          <div />
 
-        <YtUpload
-          loading={loading}
-          setLoading={setLoading}
-          errMessage={errMessage}
-          setErrMessage={setErrorMessage}
-        />
+          <YtUpload
+            loading={loading}
+            setLoading={setLoading}
+            errMessage={errMessage}
+            setErrMessage={setErrorMessage}
+          />
+        </div>
       </div>
     </>
   );

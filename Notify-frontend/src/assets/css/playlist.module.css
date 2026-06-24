@@ -6,15 +6,16 @@
   overflow: scroll;
 }
 
-/* Header */
 .playlist h1 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 3rem;
+
   font-weight: 800;
-  margin-bottom: 1.5rem;
   margin-top: 0;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  overflow: scroll;
 }
 
 .playlist h1 p {
@@ -27,12 +28,11 @@
   border: none;
   border-bottom: 2px solid #1db954;
   color: white;
-  font-size: 3rem;
   font-weight: 800;
   outline: none;
+  width: 100%;
 }
 
-/* Action buttons */
 .playlist > button {
   background: #282828;
   color: white;
@@ -53,15 +53,13 @@
   transform: scale(1.05);
 }
 
-/* Songs container */
 .playlist > div:last-child {
   margin-top: 2rem;
 }
 
-/* Track row */
 .playlist > div:last-child > div {
   display: grid;
-  grid-template-columns: 50px 1fr 100px 60px;
+  grid-template-columns: 0.2fr 1fr 0.2fr 0.4fr;
   align-items: center;
   gap: 1rem;
 
@@ -74,23 +72,28 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Track number */
 .playlist > div:last-child > div p:first-child {
   color: #b3b3b3;
 }
 
-/* Track title */
 .playlist > div:last-child > div p:nth-child(2) {
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: scroll;
   font-weight: 500;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.playlist > div:last-child > div p:nth-child(2)::-webkit-scrollbar {
+  display: none;
 }
 
-/* Duration */
 .playlist > div:last-child > div p:nth-child(3) {
   color: #b3b3b3;
   text-align: right;
 }
 
-/* Delete song button */
 .playlist > div:last-child > div button {
   background: transparent;
   border: none;
@@ -103,4 +106,31 @@
 .playlist > div:last-child > div button:hover {
   color: #ff4d4d;
   transform: scale(1.1);
+}
+
+@media (min-width: 769px) {
+  .playlist h1 {
+    font-size: 3rem;
+  }
+  .playlist h1 input {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .playlist h1 {
+    font-size: 1.5rem;
+  }
+  .playlist h1 input {
+    font-size: 1.5rem;
+  }
+
+  .playlist > div:last-child > div {
+    width: 95%;
+    margin-left: -10%;
+  }
+
+  .playlist > div:last-child > div p:nth-child(2) {
+    font-size: 0.6rem;
+  }
 }

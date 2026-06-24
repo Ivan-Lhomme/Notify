@@ -46,6 +46,20 @@ export default function Home() {
   });
   const [search, setSearch] = useState("");
   const [shuffle, setShuffle] = useState(false);
+  const [isPhone, setIsPhone] = useState(
+    window.window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .window.window.window.window.window.window.window.window.window.window
+      .innerWidth <= 768,
+  );
 
   const setPlaylistRoute = () => {
     setRoute((prev) => {
@@ -131,6 +145,27 @@ export default function Home() {
     musicFetch();
 
     chargeRef.current = true;
+
+    const handleResize = () => {
+      setIsPhone(
+        window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .window.window.window.window.window.window.window.window.window.window
+          .innerWidth <= 768,
+      );
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (!chargeRef) {
@@ -144,6 +179,7 @@ export default function Home() {
         setRoute={setRoute}
         search={search}
         setSearch={setSearch}
+        isPhone={isPhone}
       />
 
       <div className={styles["middle"]}>
@@ -173,6 +209,7 @@ export default function Home() {
             resetRoute={resetRoute}
             playlistsFetch={playlistsFetch}
             musicsFetch={musicFetch}
+            isPhone={isPhone}
           />
         ) : route.createPlaylist ? (
           <CreatePlaylist

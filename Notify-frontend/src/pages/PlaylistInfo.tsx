@@ -12,6 +12,7 @@ export default function PlaylistInfo({
   resetRoute,
   playlistsFetch,
   musicsFetch,
+  isPhone,
 }: PlaylistProps) {
   const [playlistName, setPlaylistName] = useState(playlist.name);
   const [modifyingName, setModifyingName] = useState(false);
@@ -98,38 +99,30 @@ export default function PlaylistInfo({
         <FaPlay />
       </button>
       <div>
-        {playlist.musics && playlist.name !== "Liked"
-          ? playlist.musics.map((music, index) => (
-              <div key={music.uuid + index}>
-                <p>{index + 1}</p>
-                <p>{music.title}</p>
-                {music.duration === 0 ? (
-                  <p>-:--</p>
-                ) : (
-                  <p>{`${Math.floor(music.duration / 60)}:${music.duration % 60}`}</p>
-                )}
+        {playlist.musics &&
+          playlist.musics.map((music, index) => (
+            <div key={music.uuid + index}>
+              <p>{index + 1}</p>
+              <p className={styles["musicTitle"]}>{music.title}</p>
+              <p>
+                {isPhone
+                  ? ""
+                  : music.duration === 0
+                    ? "-:--"
+                    : `${Math.floor(music.duration / 60)}:${music.duration % 60}`}
+              </p>
 
+              {playlist.name !== "Liked" ? (
                 <button onClick={() => handleDeleteMusic(music)}>
                   <RiDeleteBin5Fill />
                 </button>
-              </div>
-            ))
-          : playlist.musics &&
-            playlist.musics.map((music, index) => (
-              <div key={music.uuid + index}>
-                <p>{index + 1}</p>
-                <p>{music.title}</p>
-                {music.duration === 0 ? (
-                  <p>-:--</p>
-                ) : (
-                  <p>{`${Math.floor(music.duration / 60)}:${music.duration % 60}`}</p>
-                )}
-
+              ) : (
                 <button onClick={() => unliked(music.uuid)}>
                   <FaHeart />
                 </button>
-              </div>
-            ))}
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

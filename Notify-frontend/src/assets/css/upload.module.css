@@ -1,11 +1,12 @@
 .container {
   display: flex;
-  justify-content: space-around;
+  max-height: 100vh;
 }
 
 .button {
   margin-top: 12px;
 
+  width: 4rem;
   height: 46px;
 
   border: none;
@@ -34,19 +35,18 @@
 }
 
 .uploadForm {
-  width: min(500px, 90%);
-  margin: 40px auto;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
-
-  padding: 28px;
 
   background: #181818;
   border-radius: 16px;
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.uploadForm > h1 {
+  color: #1db954;
 }
 
 /* Labels */
@@ -158,4 +158,40 @@
   color: #f15e6c;
   text-align: center;
   margin: 0;
+}
+
+@media (min-width: 769px) {
+  .container {
+    justify-content: space-evenly;
+  }
+
+  .uploadForm {
+    width: 40%;
+    margin: 40px auto;
+    padding: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-container {
+    max-height: 100vh;
+    overflow: scroll;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 5%;
+    padding-bottom: 55%;
+    gap: 1rem;
+  }
+
+  .uploadForm {
+    width: 80%;
+    padding: 10%;
+  }
+
+  .uploadForm > h1 {
+    margin: 0;
+  }
 }

@@ -3,15 +3,19 @@ import type { UpperBarProps } from "../utils/PropsType";
 import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/upperBar.module.css";
 import { GoHome, GoHomeFill } from "react-icons/go";
+import UpperBarButtons from "./UpperBarButtons";
+import BurgerMenu from "./BurgerMenu";
 
 export default function UpperBar({
   route,
   setRoute,
   search,
   setSearch,
+  isPhone,
 }: UpperBarProps) {
   const artistRef = useRef(false);
   const adminRef = useRef(false);
+
   useEffect(() => {
     apiFetch("/api/artist", "GET").then(
       (res) => (artistRef.current = res.status === 404),
@@ -31,37 +35,6 @@ export default function UpperBar({
         playlist: false,
         createPlaylist: false,
         search: false,
-      };
-    });
-  };
-
-  const profile = () => {
-    setSearch("");
-    setRoute((prev) => {
-      return {
-        ...prev,
-        profile: true,
-        playlist: false,
-        createPlaylist: false,
-        search: false,
-      };
-    });
-  };
-
-  const queue = () => {
-    setRoute((prev) => {
-      return {
-        ...prev,
-        queue: true,
-      };
-    });
-  };
-
-  const actualMusicInfo = () => {
-    setRoute((prev) => {
-      return {
-        ...prev,
-        queue: false,
       };
     });
   };
@@ -107,24 +80,22 @@ export default function UpperBar({
         id={styles["searchBar"]}
         placeholder="Search..."
       />
-      <button onClick={profile}>Profile</button>
-      <button onClick={queue}>Queue</button>
-      <button onClick={actualMusicInfo}>Music</button>
-      {artistRef.current && (
-        <button
-          className={styles["uploadBtn"]}
-          onClick={() => (window.location.href = "/upload")}
-        >
-          Upload
-        </button>
-      )}
-      {adminRef.current && (
-        <button
-          className={styles["adminBtn"]}
-          onClick={() => (window.location.href = "/admin")}
-        >
-          Admin Panel
-        </button>
+      {isPhone ? (
+        <BurgerMenu
+          setRoute={setRoute}
+          setSearch={setSearch}
+          styles={styles}
+          artistRef={artistRef}
+          adminRef={adminRef}
+        />
+      ) : (
+        <UpperBarButtons
+          setRoute={setRoute}
+          setSearch={setSearch}
+          styles={styles}
+          artistRef={artistRef}
+          adminRef={adminRef}
+        />
       )}
     </div>
   );

@@ -25,10 +25,9 @@
 
   font-size: 0.95rem;
   font-weight: 500;
+  overflow-wrap: break-word;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 /* Optional numbering */
@@ -51,6 +50,11 @@
   margin-left: 8px;
   color: #1db954;
   font-weight: 700;
+
+  font-size: 0.95rem;
+  overflow-wrap: break-word;
+
+  white-space: wrap;
 }
 
 .currentQueueItem p .index {
