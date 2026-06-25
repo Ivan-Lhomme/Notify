@@ -286,6 +286,13 @@ export default function PlayingBar({
             setSliding(false);
             handleSlider();
           }}
+          onPointerDown={() => {
+            setSliding(true);
+          }}
+          onPointerUp={() => {
+            setSliding(false);
+            handleSlider();
+          }}
           style={
             {
               "--progress": `${actualMusic.progress}%`,
