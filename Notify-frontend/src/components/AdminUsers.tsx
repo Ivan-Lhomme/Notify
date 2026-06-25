@@ -65,6 +65,7 @@ export default function AdminUsers({
     e: React.ChangeEvent<HTMLSelectElement>,
     userUuid: string,
   ) => {
+    e.stopPropagation();
     const role = Number.parseInt(e.target.value);
 
     setUsersNewRole((prev) =>
@@ -124,6 +125,7 @@ export default function AdminUsers({
                         value={newRole.role}
                         name="role"
                         id="role"
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleRoleSelect(e, user.uuid)}
                       >
                         <option value={1}>Admin</option>
