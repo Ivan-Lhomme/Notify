@@ -93,7 +93,7 @@
 
   width: 10rem;
   max-width: 80vw;
-  height: 100vh;
+  height: 100dvh;
 
   background: rgba(0, 0, 0, 0.3);
   z-index: 1000;
@@ -113,7 +113,7 @@
 .hiddenMenu {
   background: rgba(0, 0, 0, 0.3);
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   z-index: 999;
 
   position: absolute;

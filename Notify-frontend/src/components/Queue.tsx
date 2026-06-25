@@ -14,6 +14,7 @@ export default function Queue({ queue, actualMusic }: QueueProps) {
                   : "queueItem"
               ]
             }
+            key={index}
           >
             <p>
               <span className={styles["index"]}>{index + 1}</span> {music.title}

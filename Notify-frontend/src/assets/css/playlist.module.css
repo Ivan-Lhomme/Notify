@@ -16,6 +16,12 @@
   margin-bottom: 1.5rem;
   width: 100%;
   overflow: scroll;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.playlist h1::-webkit-scrollbar {
+  display: none;
 }
 
 .playlist h1 p {
@@ -78,7 +84,6 @@
 
 .playlist > div:last-child > div p:nth-child(2) {
   text-wrap: nowrap;
-  text-overflow: ellipsis;
   overflow: scroll;
   font-weight: 500;
 
@@ -87,6 +92,11 @@
 }
 .playlist > div:last-child > div p:nth-child(2)::-webkit-scrollbar {
   display: none;
+}
+@supports (-moz-appearance: none) {
+  .playlist > div:last-child > div p:nth-child(2) {
+    text-overflow: ellipsis;
+  }
 }
 
 .playlist > div:last-child > div p:nth-child(3) {

@@ -8,13 +8,20 @@ import apiFetch from "../utils/apiFetch";
 import PlayingBar from "../components/PlayingBar";
 import styles from "../assets/css/home.module.css";
 import PlaylistInfo from "./PlaylistInfo";
-import type { ActualMusic, HomeRoute, Music, Playlist } from "../utils/Types";
+import {
+  Music,
+  type ActualMusic,
+  type HomeRoute,
+  type Playlist,
+} from "../utils/Types";
 import Queue from "../components/Queue";
 import Musics from "./Musics";
 import CreatePlaylist from "./CreatePlaylist";
+import { apiLocation } from "../utils/apiLocation";
 
 export default function Home() {
   const chargeRef = useRef(false);
+  const musicRef = useRef<HTMLAudioElement>(null);
   const [route, setRoute] = useState<HomeRoute>({
     profile: false,
     playlist: false,
@@ -27,18 +34,7 @@ export default function Home() {
   const [musics, setMusics] = useState<Music[]>([]);
   const [queue, setQueue] = useState<Music[]>([]);
   const [actualMusic, setActualMusic] = useState<ActualMusic>({
-    music: {
-      uuid: "",
-      id_publisher: "",
-      title: "",
-      explicit: false,
-      plays_count: 0,
-      duration: 0,
-      bitrate: 0,
-      size: 0,
-      liked: false,
-      upload_at: "",
-    },
+    music: new Music(),
     progress: "0",
     currentTime: "-:--",
     playing: false,
@@ -86,6 +82,8 @@ export default function Home() {
   };
 
   const newQueue = (queue: Music[]): Music => {
+    if (queue.length <= 0) return new Music();
+
     if (shuffle) {
       const shuffledQueue: Music[] = [];
 
@@ -105,12 +103,16 @@ export default function Home() {
     }
 
     setQueue(queue);
-    if (queue.length > 0)
-      setActualMusic({
+    if (queue.length > 0) {
+      const newMusic = {
         ...actualMusic,
         music: queue[0],
         number: 0,
-      });
+      };
+
+      setActualMusic(newMusic);
+      startMusic(newMusic);
+    }
 
     return queue[0];
   };
@@ -139,6 +141,22 @@ export default function Home() {
     );
 
   const shuffled = (): Music => newQueue(queue);
+
+  const startMusic = async (actualMusicParam?: ActualMusic) => {
+    const actualMusicCpy = actualMusicParam ? actualMusicParam : actualMusic;
+    if (!musicRef.current || actualMusicCpy.music.uuid === "") return;
+
+    await apiFetch("/refresh", "GET");
+    musicRef.current.src = `${apiLocation}/api/user/play/${actualMusicCpy.music.uuid}`;
+
+    await musicRef.current.play();
+    setActualMusic((prev) => {
+      if (!musicRef.current) return prev;
+
+      actualMusicCpy.playing = true;
+      return actualMusicCpy;
+    });
+  };
 
   useEffect(() => {
     playlistsFetch();
@@ -256,6 +274,8 @@ export default function Home() {
         shuffle={shuffle}
         setShuffle={setShuffle}
         shuffled={shuffled}
+        musicRef={musicRef}
+        startMusic={startMusic}
       />
     </div>
   );

@@ -7,18 +7,18 @@ export type Playlist = {
   created_at: string;
 };
 
-export type Music = {
-  uuid: string;
-  id_publisher: string;
-  title: string;
-  explicit: boolean;
-  plays_count: number;
-  duration: number;
-  bitrate: number;
-  size: number;
-  liked: boolean;
-  upload_at: string;
-};
+export class Music {
+  uuid = "";
+  id_publisher = "";
+  title = "";
+  explicit = false;
+  plays_count = 0;
+  duration = 0;
+  bitrate = 0;
+  size = 0;
+  liked = false;
+  upload_at = "";
+}
 
 export type HomeRoute = {
   profile: boolean;

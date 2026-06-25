@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import apiFetch from "../utils/apiFetch";
 import { apiLocation } from "../utils/apiLocation";
 import type { PlayingBarProps } from "../utils/PropsType";
@@ -15,8 +15,9 @@ export default function PlayingBar({
   shuffle,
   setShuffle,
   shuffled,
+  musicRef,
+  startMusic,
 }: PlayingBarProps) {
-  const musicRef = useRef<HTMLAudioElement>(null);
   const [sliding, setSliding] = useState(false);
   const [cycle, setCycle] = useState(true);
 
@@ -68,23 +69,6 @@ export default function PlayingBar({
       (Number(actualMusic.progress) / 100) * actualMusic.music.duration;
   };
 
-  const startMusic = async () => {
-    if (!musicRef.current || actualMusic.music.uuid === "") return;
-
-    await apiFetch("/refresh", "GET");
-    musicRef.current.src = `${apiLocation}/api/user/play/${actualMusic.music.uuid}`;
-
-    await musicRef.current.play();
-    setActualMusic((prev) => {
-      if (!musicRef.current) return prev;
-
-      return {
-        ...prev,
-        playing: true,
-      };
-    });
-  };
-
   const unpauseMusic = async () => {
     if (!musicRef.current) return;
 
@@ -120,7 +104,7 @@ export default function PlayingBar({
     const newMusicNumber = actualMusic.number + 1;
     const newMusic = queue[newMusicNumber];
 
-    if (shuffle && !newMusic) {
+    if (shuffle && !newMusic && cycle) {
       setToMusic(shuffled());
       return;
     }
@@ -211,7 +195,6 @@ export default function PlayingBar({
 
     await musicRef.current.play();
 
-    music.duration = musicRef.current.duration;
     setActualMusic((prev) => {
       return {
         ...prev,

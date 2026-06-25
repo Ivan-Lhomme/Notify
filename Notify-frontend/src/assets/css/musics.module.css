@@ -41,8 +41,12 @@
   font-weight: 500;
 
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+}
+@supports (-moz-appearance: none) {
+  .music p {
+    text-overflow: ellipsis;
+  }
 }
 
 .music > div {

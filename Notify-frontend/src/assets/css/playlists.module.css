@@ -45,8 +45,18 @@
   font-weight: 700;
 
   line-height: 1.3;
-  text-overflow: ellipsis;
   overflow: scroll;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.playlistName::-webkit-scrollbar {
+  display: none;
+}
+@supports (-moz-appearance: none) {
+  .playlistName {
+    text-overflow: ellipsis;
+  }
 }
 
 .playlistCard button {

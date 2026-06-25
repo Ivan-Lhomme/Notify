@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  max-height: 100vh;
+  max-height: 100dvh;
 }
 
 .button {
@@ -174,7 +174,7 @@
 
 @media (max-width: 768px) {
   .post-container {
-    max-height: 100vh;
+    max-height: 100dvh;
     overflow: scroll;
   }
 

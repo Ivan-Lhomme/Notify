@@ -2,10 +2,13 @@
   display: flex;
   flex-direction: column;
   max-height: 75vh;
-  overflow: scroll;
   background: #181818;
   border-radius: 20px;
   padding-bottom: 50px;
+  overflow: scroll;
+
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
 }
 
 .title {

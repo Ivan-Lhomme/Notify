@@ -54,6 +54,8 @@ export type PlayingBarProps = {
   shuffle: boolean;
   setShuffle: React.Dispatch<React.SetStateAction<boolean>>;
   shuffled: Function;
+  musicRef: React.RefObject<HTMLAudioElement | null>;
+  startMusic: () => Promise<void>;
 };
 
 export type MusicsProps = {
