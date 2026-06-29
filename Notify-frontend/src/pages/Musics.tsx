@@ -4,6 +4,7 @@ import apiFetch from "../utils/apiFetch";
 import styles from "../assets/css/musics.module.css";
 import { FaHeart, FaPlay, FaRegHeart } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
+import type { Music } from "../utils/Types";
 
 export default function Musics({
   musics,
@@ -43,6 +44,15 @@ export default function Musics({
     }
   };
 
+  const musicInPlaylist = (
+    playlistMusics: Music[],
+    musicUuid: string,
+  ): boolean => {
+    if (!playlistMusics) return false;
+
+    return !!playlistMusics.find((value) => value.uuid === musicUuid);
+  };
+
   return (
     <div className={styles["container"]}>
       {musics.map((music, index) => {
@@ -75,7 +85,10 @@ export default function Musics({
                   {showSelectPlaylist && (
                     <div>
                       {playlists.map((playlist) => {
-                        if (playlist.name !== "Liked") {
+                        if (
+                          playlist.name !== "Liked" &&
+                          !musicInPlaylist(playlist.musics, music.uuid)
+                        ) {
                           return (
                             <p
                               key={playlist.uuid}
