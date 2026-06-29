@@ -7,6 +7,24 @@
   gap: 6px;
 
   padding: 12px 0;
+  overflow: auto;
+}
+
+.container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 999px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .music {
