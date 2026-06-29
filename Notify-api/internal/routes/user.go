@@ -269,6 +269,9 @@ func User(app fiber.Router, db *sql.DB) {
 			return c.SendStatus(400)
 		}
 
+		in_playlist := repository.Music_already_in_playlist(db, playlist.UUID, mtp.Id_music)
+		if in_playlist { return c.SendStatus(400) }
+
 		err = repository.Add_music_to_playlist(db, playlist.UUID, mtp.Id_music)
 		if err != nil {
 			fmt.Printf("Error in user/addmusictoplaylist on querie 2 : \n%v\n", err)

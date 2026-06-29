@@ -231,3 +231,16 @@ func Music_is_liked(db *sql.DB, user_uuid, music_uuid string) bool {
 
 	return exist
 }
+
+func Music_already_in_playlist(db *sql.DB, playlist_uuid, music_uuid string) bool {
+	query := `SELECT EXISTS(SELECT * FROM music_in_playlist WHERE id_playlist=$1 AND id_music=$2)`
+
+	var exist bool
+	err := db.QueryRow(query, playlist_uuid, music_uuid).Scan(&exist)
+
+	if err != nil {
+		return false
+	}
+
+	return exist
+}
